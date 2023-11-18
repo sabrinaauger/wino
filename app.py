@@ -5,6 +5,7 @@ global_wine_preference = None
 global_flavour_options = None
 global_dryness_options = None
 
+#Define page state
 def main():
     if 'page' not in st.session_state:
         st.session_state.page = 'welcome'
@@ -16,6 +17,7 @@ def main():
     elif st.session_state.page == 'result':
         wine_result_page()
 
+#Set Welcome Page
 def welcome_page():
     st.title("Welcome to Wino!")
     st.write("""
@@ -27,10 +29,16 @@ def welcome_page():
         - Get a personalized wine recommendation based on your choices.
         - Discover new wines that match your taste!
     """)
-    if st.button("Get Started"):
-        st.session_state.page = 'survey'
+    #Click on button to set page to survey which sends user to survey page
+    st.button("Get Started", on_click=set_page_to_survey)
 
+#Set page to survey
+def set_page_to_survey():
+    st.session_state.page = 'survey'
+
+#Define the suvery page
 def wine_survey_page():
+    #declare global variables that will be used
     global global_wine_preference
     global global_flavour_options
     global global_dryness_options
@@ -50,10 +58,16 @@ def wine_survey_page():
     dryness_options = st.multiselect("Select your preferred dryness options:", ['Sweet', 'Off-Dry', 'Medium Dry', 'Dry'])
 
     # Submit button
-    if st.button("Submit"):
-        st.session_state.page = 'result'
-        set_global_variables(wine_preference, flavour_options, dryness_options)
+    st.button("Submit", on_click=lambda: submit_survey(wine_preference, flavour_options, dryness_options))
 
+#Once the survey has been submitted...
+def submit_survey(wine_preference, flavour_options, dryness_options):
+    #...we store the variables in our global variables to be used across the pages
+    set_global_variables(wine_preference, flavour_options, dryness_options)
+    #set to result to go to result page
+    st.session_state.page = 'result'
+
+#store the variables in our global variables to be used across the pages
 def set_global_variables(wine_preference, flavour_options, dryness_options):
     global global_wine_preference
     global global_flavour_options
@@ -85,7 +99,6 @@ def suggest_wines():
 
     return [suggestion1, suggestion2, suggestion3]
 
-
 def wine_result_page():
     # Suggested wines based on preferences
     suggestions = suggest_wines()
@@ -105,8 +118,10 @@ def wine_result_page():
         st.write(suggestions[2])
 
     # Redo survey button
-    if st.button("I'm not satisfied. Redo the survey"):
-        st.session_state.page = 'welcome'
+    st.button("I'm not satisfied. Redo the survey", on_click=set_page_to_welcome)
+
+def set_page_to_welcome():
+    st.session_state.page = 'welcome'
 
 if __name__ == "__main__":
     main()
