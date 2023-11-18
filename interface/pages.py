@@ -29,6 +29,7 @@ def wine_result_page():
     st.subheader("Suggested Wine 1:")
     st.write(suggestions[0])
 
+
     # Button to show additional suggestions
     if st.button("Show additional suggestions"):
         # Display the second suggestion
