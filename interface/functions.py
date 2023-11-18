@@ -1,30 +1,43 @@
 #variables flavour and dryness are currently placeholders, need to add more options depending on data
 
 import streamlit as st
+from interface.data import load_region
 
 #Set page to survey
 def set_page_to_survey():
     st.session_state.page = 'survey'
-
+#set page to welcome
 def set_page_to_welcome():
     st.session_state.page = 'welcome'
 
 #store the variables in our global variables to be used across the pages
-def set_global_variables(price_range, wine_preference, flavour_options, dryness_options):
+def set_global_variables(price_range, wine_preference, selected_region, flavour_options, dryness_options):
     global global_price_range
     global global_wine_preference
+    global global_regions
     global global_flavour_options
     global global_dryness_options
 
     global_price_range = price_range
     global_wine_preference = wine_preference
+    global_regions = selected_region
     global_flavour_options = flavour_options
     global_dryness_options = dryness_options
+
+# select region
+def region_selector():
+    df = load_region()  # Load the dataset
+
+    # Display a region selector widget using Streamlit
+    selected_region = st.selectbox("Select a Region:", df['province'].unique())
+
+    return selected_region
 
 def suggest_wines():
     # Access variables from the global scope
     price_range = global_price_range
     wine_preference = global_wine_preference
+    selected_region = global_regions
     flavour_options = global_flavour_options
     dryness_options = global_dryness_options
 
@@ -53,14 +66,14 @@ def suggest_wines():
 
     # Ensure there are at least 3 suggestions
     while len(recommendations) < 3:
-        recommendations.append("Generic Wine Choice")
+        recommendations.append(f"Generic Wine Choice from {selected_region}")
 
     return recommendations
 
 
 #Once the survey has been submitted...
-def submit_survey(price_range, wine_preference, flavour_options, dryness_options):
+def submit_survey(price_range, wine_preference, selected_region, flavour_options, dryness_options):
     #...we store the variables in our global variables to be used across the pages
-    set_global_variables(price_range,wine_preference, flavour_options, dryness_options)
+    set_global_variables(price_range,wine_preference, selected_region, flavour_options, dryness_options)
     #set to result to go to result page
     st.session_state.page = 'result'
