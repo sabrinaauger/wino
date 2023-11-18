@@ -106,8 +106,7 @@ def wine_result_page():
 
     # Redo survey button
     if st.button("I'm not satisfied. Redo the survey"):
-        st.warning("Survey reset. Please submit your preferences again.")
-        main()
+        st.session_state.page = 'welcome'
 
 if __name__ == "__main__":
     main()
