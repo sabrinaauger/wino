@@ -1,6 +1,7 @@
 import streamlit as st
-from pages import welcome_page, wine_survey_page, wine_result_page
+from pages import welcome_page, survey_page, wine_result_page
 # Declare global variables
+global_price_range = None
 global_wine_preference = None
 global_flavour_options = None
 global_dryness_options = None
@@ -13,7 +14,7 @@ def main():
     if st.session_state.page == 'welcome':
         welcome_page()
     elif st.session_state.page == 'survey':
-        wine_survey_page()
+        survey_page()
     elif st.session_state.page == 'result':
         wine_result_page()
 

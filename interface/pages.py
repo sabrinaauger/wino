@@ -1,5 +1,6 @@
 import streamlit as st
-from functions import set_page_to_survey, set_page_to_welcome, submit_survey, suggest_wines
+from functions import set_page_to_survey, set_page_to_welcome, suggest_wines
+from survey import wine_survey_page
 #Set Welcome Page
 def welcome_page():
     st.title("Welcome to Wino!")
@@ -15,29 +16,9 @@ def welcome_page():
     #Click on button to set page to survey which sends user to survey page
     st.button("Get Started", on_click=set_page_to_survey)
 
-#Define the suvery page
-def wine_survey_page():
-    #declare global variables that will be used
-    global global_wine_preference
-    global global_flavour_options
-    global global_dryness_options
-
-    st.title("Wine Survey")
-
-    # Wine preference section
-    st.header("Wine Preference")
-    wine_preference = st.radio("Select your wine preference:", ['White', 'Red'])
-
-    # Flavor options section
-    st.header("Flavor Options")
-    flavour_options = st.multiselect("Select your preferred flavor options:", ['Fruity', 'Floral', 'Herbal', 'Earthy'])
-
-    # Dryness options section
-    st.header("Dryness Options")
-    dryness_options = st.multiselect("Select your preferred dryness options:", ['Sweet', 'Off-Dry', 'Medium Dry', 'Dry'])
-
-    # Submit button
-    st.button("Submit", on_click=lambda: submit_survey(wine_preference, flavour_options, dryness_options))
+# Define the survey page
+def survey_page():
+    wine_survey_page()
 
 
 def wine_result_page():
