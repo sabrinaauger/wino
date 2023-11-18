@@ -28,25 +28,35 @@ def suggest_wines():
     flavour_options = global_flavour_options
     dryness_options = global_dryness_options
 
-    # Set min price and max price
-    min_price = price_range[0]
-    max_price = price_range[1]
+    recommendations = []
 
-    # Replace this with your logic to suggest wines based on preferences
-    # For simplicity, placeholder suggestions are used here.
-    suggestion_parts = [f"A recommended wine for your preferences: {wine_preference} around \${min_price} and \${max_price}"]
+    # Basic recommendation logic based on user's preferences,replace with actual model when ready
+    if wine_preference == 'Red':
+        if 'Fruity' in flavour_options and 'Sweet' in dryness_options:
+            recommendations.append("Zinfandel (Fruity, Sweet)")
+        if 'Earthy' in flavour_options and 'Dry' in dryness_options:
+            recommendations.append("Shiraz (Earthy, Dry)")
+    elif wine_preference == 'White':
+        if 'Floral' in flavour_options and 'Sweet' in dryness_options:
+            recommendations.append("Moscato (Floral, Sweet)")
+        if 'Herbal' in flavour_options and 'Dry' in dryness_options:
+            recommendations.append("Chardonnay (Herbal, Dry)")
 
-    if flavour_options:
-        suggestion_parts.append(f"with {', '.join(flavour_options)} flavors")
+    # Further refinement based on price range
+    min_price, max_price = price_range
+    if min_price < 20:
+        recommendations.append("Affordable Choice: Chardonnay")
+    elif min_price >= 20 and max_price <= 50:
+        recommendations.append("Mid-Range Choice: Pinot Noir")
+    elif max_price > 50:
+        recommendations.append("Premium Choice: Cabernet Sauvignon")
 
-    if dryness_options:
-        suggestion_parts.append(f"and {', '.join(dryness_options)} dryness")
+    # Ensure there are at least 3 suggestions
+    while len(recommendations) < 3:
+        recommendations.append("Generic Wine Choice")
 
-    suggestion1 = ' '.join(suggestion_parts) + "."
-    suggestion2 = "Another suggestion based on your preferences..."
-    suggestion3 = "Yet another suggestion based on your preferences..."
+    return recommendations
 
-    return [suggestion1, suggestion2, suggestion3]
 
 #Once the survey has been submitted...
 def submit_survey(price_range, wine_preference, flavour_options, dryness_options):
