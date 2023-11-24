@@ -1,7 +1,8 @@
 # survey.py
 
 import streamlit as st
-from functions import submit_survey
+from interface.functions import submit_survey
+from interface.data import load_region
 
 def wine_survey_page():
     # Declare global variables that will be used
