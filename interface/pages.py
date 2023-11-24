@@ -1,11 +1,6 @@
 import streamlit as st
-<<<<<<< HEAD
-from functions import set_page_to_survey, set_page_to_welcome, suggest_wines
-from survey import wine_survey_page
-=======
 from interface.functions import set_page_to_survey, set_page_to_welcome, suggest_wines
 from interface.survey import wine_survey_page
->>>>>>> 4b8f5a10c83c22227d76ef3f3d98c5eb29332cf3
 #Set Welcome Page
 def welcome_page():
     st.title("Welcome to Wino!")
@@ -34,10 +29,6 @@ def wine_result_page():
     st.subheader("Suggested Wine 1:")
     st.write(suggestions[0])
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 4b8f5a10c83c22227d76ef3f3d98c5eb29332cf3
     # Button to show additional suggestions
     if st.button("Show additional suggestions"):
         # Display the second suggestion

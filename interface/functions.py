@@ -1,43 +1,25 @@
 #variables flavour and dryness are currently placeholders, need to add more options depending on data
 
 import streamlit as st
-<<<<<<< HEAD
-=======
 from interface.data import load_region
->>>>>>> 4b8f5a10c83c22227d76ef3f3d98c5eb29332cf3
 
 #Set page to survey
 def set_page_to_survey():
     st.session_state.page = 'survey'
-<<<<<<< HEAD
-
-=======
 #set page to welcome
->>>>>>> 4b8f5a10c83c22227d76ef3f3d98c5eb29332cf3
 def set_page_to_welcome():
     st.session_state.page = 'welcome'
 
 #store the variables in our global variables to be used across the pages
-<<<<<<< HEAD
-def set_global_variables(price_range, wine_preference, flavour_options, dryness_options):
-    global global_price_range
-    global global_wine_preference
-=======
 def set_global_variables(price_range, wine_preference, selected_region, flavour_options, dryness_options):
     global global_price_range
     global global_wine_preference
     global global_regions
->>>>>>> 4b8f5a10c83c22227d76ef3f3d98c5eb29332cf3
     global global_flavour_options
     global global_dryness_options
 
     global_price_range = price_range
     global_wine_preference = wine_preference
-<<<<<<< HEAD
-    global_flavour_options = flavour_options
-    global_dryness_options = dryness_options
-
-=======
     global_regions = selected_region
     global_flavour_options = flavour_options
     global_dryness_options = dryness_options
@@ -51,15 +33,11 @@ def region_selector():
 
     return selected_region
 
->>>>>>> 4b8f5a10c83c22227d76ef3f3d98c5eb29332cf3
 def suggest_wines():
     # Access variables from the global scope
     price_range = global_price_range
     wine_preference = global_wine_preference
-<<<<<<< HEAD
-=======
     selected_region = global_regions
->>>>>>> 4b8f5a10c83c22227d76ef3f3d98c5eb29332cf3
     flavour_options = global_flavour_options
     dryness_options = global_dryness_options
 
@@ -88,24 +66,14 @@ def suggest_wines():
 
     # Ensure there are at least 3 suggestions
     while len(recommendations) < 3:
-<<<<<<< HEAD
-        recommendations.append("Generic Wine Choice")
-=======
         recommendations.append(f"Generic Wine Choice from {selected_region}")
->>>>>>> 4b8f5a10c83c22227d76ef3f3d98c5eb29332cf3
 
     return recommendations
 
 
 #Once the survey has been submitted...
-<<<<<<< HEAD
-def submit_survey(price_range, wine_preference, flavour_options, dryness_options):
-    #...we store the variables in our global variables to be used across the pages
-    set_global_variables(price_range,wine_preference, flavour_options, dryness_options)
-=======
 def submit_survey(price_range, wine_preference, selected_region, flavour_options, dryness_options):
     #...we store the variables in our global variables to be used across the pages
     set_global_variables(price_range,wine_preference, selected_region, flavour_options, dryness_options)
->>>>>>> 4b8f5a10c83c22227d76ef3f3d98c5eb29332cf3
     #set to result to go to result page
     st.session_state.page = 'result'
