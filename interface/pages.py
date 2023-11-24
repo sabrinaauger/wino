@@ -1,6 +1,7 @@
 import streamlit as st
 from interface.functions import set_page_to_survey, set_page_to_welcome, suggest_wines
 from interface.survey import wine_survey_page
+
 #Set Welcome Page
 def welcome_page():
     st.title("Welcome to Wino!")
