@@ -55,12 +55,6 @@ def categorize_word(word):
 
     return selected_category
 
-# Example usage
-word = 'fruity'
-category = categorize_word(word)
-print(f'The word "{word}" belongs to the category: {category}')
-
-
 # Categorize words into aromas
 categorized_aromas = {
     'fruity': [],

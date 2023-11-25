@@ -1,5 +1,5 @@
-#variables flavour and dryness are currently placeholders, need to add more options depending on data
-
+#variables flavour are currently placeholders, need to add more options depending on data
+import pandas as pd
 import streamlit as st
 from interface.data import load_country
 
@@ -11,27 +11,26 @@ def set_page_to_welcome():
     st.session_state.page = 'welcome'
 
 #store the variables in our global variables to be used across the pages
-def set_global_variables(price_range, wine_preference, selected_country, flavour_options, dryness_options):
+def set_global_variables(price_range, wine_preference, selected_country, flavour_options):
     global global_price_range
     global global_wine_preference
     global global_country
     global global_flavour_options
-    global global_dryness_options
 
     global_price_range = price_range
     global_wine_preference = wine_preference
     global_country = selected_country
     global_flavour_options = flavour_options
-    global_dryness_options = dryness_options
 
-# select country
+# Region selector function
 def country_selector():
-    df = load_country()  # Load the dataset
+    # Use the load_country function from data.py
+    df = load_country()
 
-    # Display a country selector widget using Streamlit
-    selected_country = st.selectbox("Select a country:", df.unique())
-
+    # Display a region selector widget using Streamlit
+    selected_country = st.selectbox("Select your preferred country:", df.unique())
     return selected_country
+
 
 def suggest_wines():
     # Access variables from the global scope
@@ -39,41 +38,50 @@ def suggest_wines():
     wine_preference = global_wine_preference
     selected_country = global_country
     flavour_options = global_flavour_options
-    dryness_options = global_dryness_options
 
     recommendations = []
 
+    # Loading dataset as needed to find the right suggestion
+    dataset_path = '~/code/sabrinaauger/wino/raw_data/winemag-data_first150k.csv'
+    wine_df = pd.read_csv(dataset_path)
+
     # Basic recommendation logic based on user's preferences,replace with actual model when ready
-    if wine_preference == 'Red':
-        if 'Fruity' in flavour_options and 'Sweet' in dryness_options:
-            recommendations.append("Zinfandel (Fruity, Sweet)")
-        if 'Earthy' in flavour_options and 'Dry' in dryness_options:
-            recommendations.append("Shiraz (Earthy, Dry)")
-    elif wine_preference == 'White':
-        if 'Floral' in flavour_options and 'Sweet' in dryness_options:
-            recommendations.append("Moscato (Floral, Sweet)")
-        if 'Herbal' in flavour_options and 'Dry' in dryness_options:
-            recommendations.append("Chardonnay (Herbal, Dry)")
+    # if wine_preference == 'Red':
+    #     if 'Fruity' in flavour_options:
+    #         recommendations.append("Zinfandel (Fruity, Sweet)")
+    #     if 'Earthy' in flavour_options:
+    #         recommendations.append("Shiraz (Earthy, Dry)")
+    # elif wine_preference == 'White':
+    #     if 'Floral' in flavour_options:
+    #         recommendations.append("Moscato (Floral, Sweet)")
+    #     if 'Herbal' in flavour_options:
+    #         recommendations.append("Chardonnay (Herbal, Dry)")
 
     # Further refinement based on price range
-    min_price, max_price = price_range
-    if min_price < 20:
-        recommendations.append("Affordable Choice: Chardonnay")
-    elif min_price >= 20 and max_price <= 50:
-        recommendations.append("Mid-Range Choice: Pinot Noir")
-    elif max_price > 50:
-        recommendations.append("Premium Choice: Cabernet Sauvignon")
+    # min_price, max_price = price_range
+    # if min_price < 20:
+    #     recommendations.append("Affordable Choice: Chardonnay")
+    # elif min_price >= 20 and max_price <= 50:
+    #     recommendations.append("Mid-Range Choice: Pinot Noir")
+    # elif max_price > 50:
+    #     recommendations.append("Premium Choice: Cabernet Sauvignon")
+
+    #We filter the main dataset with the given input the user has given
+    suggestion_df = wine_df[(wine_df['country'] == selected_country) & (wine_df['price'] >= price_range[0]) & (wine_df['price'] <= price_range[1])]
 
     # Ensure there are at least 3 suggestions
-    while len(recommendations) < 3:
-        recommendations.append(f"Generic Wine Choice from {selected_country}")
+    if not suggestion_df.empty:
+        recommendations = suggestion_df['variety'].tolist()[:3]
+    else:
+        # If no wines match the criteria, provide a generic suggestion
+        recommendations = [f"No wines found in the specified price range and country ({selected_country}, {price_range[0]} - {price_range[1]})"]
 
     return recommendations
 
 
 #Once the survey has been submitted...
-def submit_survey(price_range, wine_preference, selected_country, flavour_options, dryness_options):
+def submit_survey(price_range, wine_preference, selected_country, flavour_options):
     #...we store the variables in our global variables to be used across the pages
-    set_global_variables(price_range,wine_preference, selected_country, flavour_options, dryness_options)
+    set_global_variables(price_range,wine_preference, selected_country, flavour_options)
     #set to result to go to result page
     st.session_state.page = 'result'
