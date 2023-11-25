@@ -2,7 +2,7 @@
 import pandas as pd
 
 # Creating function that loads the country from a wine dataset
-def load_region():
+def load_country():
     # Load your dataset (adjust the path and format accordingly)
     dataset_path = '~/code/sabrinaauger/wino/raw_data/winemag-data_first150k.csv'
     wine_df = pd.read_csv(dataset_path)
