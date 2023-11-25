@@ -1,7 +1,8 @@
 import pandas as pd
 import spacy
+import json
+import os
 from sklearn.feature_extraction.text import TfidfVectorizer
-import pickle
 
 # Load spaCy model
 nlp = spacy.load("en_core_web_sm")
@@ -67,9 +68,9 @@ for word in sorted_words.index:
     category = categorize_word(word)
     categorized_aromas[category].append(word)
 
-# Display categorized words
+output_folder = 'aromas'
 for aroma, words in categorized_aromas.items():
-    print(f'{aroma.capitalize()} words: {words}')
-
-with open('global_aromas.pkl', 'wb') as file:
-    pickle.dump(categorized_aromas, file)
+    output_file_path = os.path.join(output_folder, f'{aroma}_words.json')
+    with open(output_file_path, 'w') as json_file:
+        json.dump(words, json_file)
+    print(f"{aroma.capitalize()} words saved to {output_file_path}")

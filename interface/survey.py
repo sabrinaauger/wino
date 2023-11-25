@@ -9,7 +9,7 @@ def wine_survey_page():
     global global_price_range
     global global_wine_preference
     global global_country
-    global global_flavour_options
+    global global_aroma_options
 
     st.title("Wine Survey")
 
@@ -29,7 +29,7 @@ def wine_survey_page():
 
     # Flavor options section
     st.header("Flavor Options")
-    flavour_options = st.multiselect("Select your preferred flavor options:", ['Fruity', 'Floral', 'Herbal', 'Earthy'])
+    aroma_options = st.multiselect("Select your preferred flavor options:", ['Fruity', 'Floral', 'Herbal', 'Earthy'])
 
     # Submit button
-    st.button("Submit", on_click=lambda: submit_survey(price_range, wine_preference, selected_country, flavour_options))
+    st.button("Submit", on_click=lambda: submit_survey(price_range, wine_preference, selected_country, aroma_options))
