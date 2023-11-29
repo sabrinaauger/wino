@@ -97,7 +97,7 @@ def suggest_wines():
     aroma_options = global_aroma_options
 
     # Loading dataset as needed to find the right suggestion
-    dataset_path = '~/code/sabrinaauger/wino/raw_data/winemag-data_first150k.csv'
+    dataset_path = '~/code/sabrinaauger/wino/interface/wine_reviews.csv'
     wine_df = pd.read_csv(dataset_path)
 
     # Filter the main dataset with the given input the user has given
