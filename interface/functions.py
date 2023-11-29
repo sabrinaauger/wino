@@ -2,7 +2,7 @@
 import json
 import pandas as pd
 import streamlit as st
-from interface.data import load_country
+from interface.data import load_data, load_country, load_price, load_designation
 from gensim.models import Word2Vec
 from gensim.models import KeyedVectors
 
@@ -31,8 +31,8 @@ def set_global_variables(price_range, wine_preference, selected_country, aroma_o
 
 # Region selector function
 def country_selector():
-    # Use the load_country function from data.py
-    df = load_country()
+    # Load data then get the country column from df
+    df = load_country(load_data())
 
     # Display a region selector widget using Streamlit
     selected_country = st.selectbox("Select your preferred country:", df.unique())
@@ -97,12 +97,15 @@ def suggest_wines():
     aroma_options = global_aroma_options
 
     # Loading dataset as needed to find the right suggestion
-    dataset_path = '~/code/sabrinaauger/wino/interface/wine_reviews.csv'
-    wine_df = pd.read_csv(dataset_path)
-
+    df = load_data()
+    price_column, min_price, max_price = load_price(df)
     # Filter the main dataset with the given input the user has given
-    suggestion_df = wine_df[(wine_df['country'] == selected_country) & (wine_df['price'] >= price_range[0]) & (wine_df['price'] <= price_range[1])]
-
+    suggestion_df = df[
+        (load_country(df) == selected_country) &
+        (price_column >= price_range[0]) &
+        (price_column <= price_range[1])
+    ]
+    choice = load_designation(suggestion_df)
     recommendations = []
 
     # Ensure there are at least 3 suggestions
@@ -111,7 +114,7 @@ def suggest_wines():
         suggestion_df = suggestion_df.sort_values(by='points', ascending=False)
 
         # Extract wine varieties from the filtered and sorted dataset
-        recommendations = suggestion_df['variety'].unique()[:3].tolist()
+        recommendations = choice.unique()[:3].tolist()
     else:
         # If no wines match the criteria, provide a generic suggestion
         recommendations = ["No matching options available. Please try again 🍷."]
