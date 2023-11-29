@@ -7,8 +7,8 @@ from gensim.models import Word2Vec
 from gensim.models import KeyedVectors
 
 # Load Word2Vec model
-model_path = 'path/to/your/word2vec/model.bin'
-word2vec_model = KeyedVectors.load_word2vec_format(model_path, binary=True)
+# model_path = 'path/to/your/word2vec/model.bin'
+# word2vec_model = KeyedVectors.load_word2vec_format(model_path, binary=True)
 
 #Set page to survey
 def set_page_to_survey():
@@ -38,7 +38,57 @@ def country_selector():
     selected_country = st.selectbox("Select your preferred country:", df.unique())
     return selected_country
 
-# This is base code + Word2Vec
+# # This is base code + Word2Vec
+# def suggest_wines():
+#     # Access variables from the global scope
+#     price_range = global_price_range
+#     wine_preference = global_wine_preference
+#     selected_country = global_country
+#     aroma_options = global_aroma_options
+
+#     recommendations = []
+
+#     # Loading dataset as needed to find the right suggestion
+#     dataset_path = '~/code/sabrinaauger/wino/raw_data/winemag-data_first150k.csv'
+#     wine_df = pd.read_csv(dataset_path)
+
+#     # Load aroma options data from JSON files
+#     aroma_keywords = []
+#     for aroma_option in aroma_options:
+#         aroma_file_path = f'aromas/{aroma_option.lower()}.json'
+#         with open(aroma_file_path, 'r') as f:
+#             aroma_data = json.load(f)
+#             aroma_keywords.extend(aroma_data)
+
+#     # We filter the main dataset with the given input the user has given
+#     suggestion_df = wine_df[
+#         (wine_df['country'] == selected_country) &
+#         (wine_df['price'] >= price_range[0]) &
+#         (wine_df['price'] <= price_range[1])
+#     ]
+
+#     # Ensure there are at least 3 suggestions
+#     if not suggestion_df.empty:
+#         # Filter the dataset based on semantic similarity in 'description' column
+#         matching_wines = []
+#         for _, wine_row in suggestion_df.iterrows():
+#             description_words = set(wine_row['description'].lower().split())
+#             for aroma_keyword in aroma_keywords:
+#                 if any(word in word2vec_model and word2vec_model.similarity(word, aroma_keyword) > 0.7 for word in description_words):
+#                     matching_wines.append(wine_row['variety'])
+#                     break
+
+#             if len(matching_wines) >= 3:
+#                 break
+
+#         recommendations = matching_wines[:3] if matching_wines else ["No available options. Please retry 🍷."]
+#     else:
+#         # If no wines match the criteria, provide a generic suggestion
+#         recommendations = [f"No wines found in the specified price range and country ({selected_country}, {price_range[0]} - {price_range[1]})"]
+
+#     return recommendations
+
+# This is base suggest_wines() with price and country only
 def suggest_wines():
     # Access variables from the global scope
     price_range = global_price_range
@@ -46,74 +96,27 @@ def suggest_wines():
     selected_country = global_country
     aroma_options = global_aroma_options
 
-    recommendations = []
-
     # Loading dataset as needed to find the right suggestion
     dataset_path = '~/code/sabrinaauger/wino/raw_data/winemag-data_first150k.csv'
     wine_df = pd.read_csv(dataset_path)
 
-    # Load aroma options data from JSON files
-    aroma_keywords = []
-    for aroma_option in aroma_options:
-        aroma_file_path = f'aromas/{aroma_option.lower()}.json'
-        with open(aroma_file_path, 'r') as f:
-            aroma_data = json.load(f)
-            aroma_keywords.extend(aroma_data)
+    # Filter the main dataset with the given input the user has given
+    suggestion_df = wine_df[(wine_df['country'] == selected_country) & (wine_df['price'] >= price_range[0]) & (wine_df['price'] <= price_range[1])]
 
-    # We filter the main dataset with the given input the user has given
-    suggestion_df = wine_df[
-        (wine_df['country'] == selected_country) &
-        (wine_df['price'] >= price_range[0]) &
-        (wine_df['price'] <= price_range[1])
-    ]
+    recommendations = []
 
     # Ensure there are at least 3 suggestions
     if not suggestion_df.empty:
-        # Filter the dataset based on semantic similarity in 'description' column
-        matching_wines = []
-        for _, wine_row in suggestion_df.iterrows():
-            description_words = set(wine_row['description'].lower().split())
-            for aroma_keyword in aroma_keywords:
-                if any(word in word2vec_model and word2vec_model.similarity(word, aroma_keyword) > 0.7 for word in description_words):
-                    matching_wines.append(wine_row['variety'])
-                    break
+        # Sort the dataset based on 'points' in descending order
+        suggestion_df = suggestion_df.sort_values(by='points', ascending=False)
 
-            if len(matching_wines) >= 3:
-                break
-
-        recommendations = matching_wines[:3] if matching_wines else ["No available options. Please retry 🍷."]
+        # Extract wine varieties from the filtered and sorted dataset
+        recommendations = suggestion_df['variety'].unique()[:3].tolist()
     else:
         # If no wines match the criteria, provide a generic suggestion
-        recommendations = [f"No wines found in the specified price range and country ({selected_country}, {price_range[0]} - {price_range[1]})"]
+        recommendations = ["No matching options available. Please try again 🍷."]
 
     return recommendations
-
-# This is base suggest_wines() with price and country only
-# def suggest_wines():
-#     # Access variables from the global scope
-    # price_range = global_price_range
-#     wine_preference = global_wine_preference
-#     selected_country = global_country
-#     aroma_options = global_aroma_options
-
-#     # Loading dataset as needed to find the right suggestion
-#     dataset_path = '~/code/sabrinaauger/wino/raw_data/winemag-data_first150k.csv'
-#     wine_df = pd.read_csv(dataset_path)
-
-#     # Filter the main dataset with the given input the user has given
-#     suggestion_df = wine_df[(wine_df['country'] == selected_country) & (wine_df['price'] >= price_range[0]) & (wine_df['price'] <= price_range[1])]
-
-#     recommendations = []
-
-#     # Ensure there are at least 3 suggestions
-#     if not suggestion_df.empty:
-#         # Extract wine varieties from the filtered dataset
-#         recommendations = suggestion_df['variety'][:3].tolist()
-#     else:
-#         # If no wines match the criteria, provide a generic suggestion
-#         recommendations = ["No matching options available. Please try again 🍷."]
-
-#     return recommendations
 
 
 #Once the survey has been submitted...

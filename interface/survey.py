@@ -20,7 +20,7 @@ def wine_survey_page():
 
     # Wine preference section
     st.header("Wine Preference")
-    wine_preference = st.radio("Select your wine preference:", ['White', 'Red'])
+    wine_preference = st.radio("Select your wine preference:", ['White', 'Red', 'Rosé', 'Sparkling'])
 
     #Country selection
     st.header("Country Selector")
