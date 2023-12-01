@@ -38,7 +38,6 @@ def wine_result_page():
             st.write(f"Recommendation: {recommendations[0]}")
             st.write(f"Price: {prices[0]}")
             st.write(f"Description: {descriptions[0]}")
-            st.write()
 
             # Check if there are additional suggestions to show
             if len(recommendations) > 1:
