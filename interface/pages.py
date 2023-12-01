@@ -23,22 +23,31 @@ def survey_page():
 
 
 def wine_result_page():
-    # Suggested wines based on preferences
-    suggestions = suggest_wines()
+    # Show a loading spinner while the suggestions are being generated
+    with st.spinner("Loading suggestions..."):
+        # Get wine suggestions
+        suggestions = suggest_wines()
 
-    # Display the first suggestion
-    st.subheader("Suggested Wine 1:")
-    st.write(suggestions[0])
+        # Display the suggestions
+        st.header("Suggested Wines:")
+        if not suggestions:
+            st.write("No available options. Please retry 🍷.")
+        else:
+            # Display the first suggestion
+            st.subheader("Suggested Wine 1:")
+            st.write(suggestions[0])
 
-    # Button to show additional suggestions
-    if st.button("Show additional suggestions"):
-        # Display the second suggestion
-        st.subheader("Suggested Wine 2:")
-        st.write(suggestions[1])
+            # Check if there are additional suggestions to show
+            if len(suggestions) > 1:
+                # Button to show additional suggestions
+                if st.button("Show additional suggestions"):
+                    # Display the second suggestion
+                    st.subheader("Suggested Wine 2:")
+                    st.write(suggestions[1])
 
-        # Display the third suggestion
-        st.subheader("Suggested Wine 3:")
-        st.write(suggestions[2])
+                    # Display the third suggestion
+                    st.subheader("Suggested Wine 3:")
+                    st.write(suggestions[2])
 
     # Redo survey button
-    st.button("I'm not satisfied. Redo the survey", on_click=set_page_to_welcome)
+    st.button("Redo the survey", on_click=set_page_to_welcome)

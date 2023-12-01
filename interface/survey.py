@@ -1,48 +1,36 @@
 # survey.py
 
 import streamlit as st
-from interface.functions import submit_survey
-from interface.data import load_region
+from interface.functions import submit_survey, country_selector
+from interface.data import load_data, load_price
 
 def wine_survey_page():
     # Declare global variables that will be used
     global global_price_range
     global global_wine_preference
-    global global_region
-    global global_flavour_options
-    global global_dryness_options
-
-    # Region selector function
-    def region_selector():
-        # Use the load_region function from data.py
-        wine_regions_df = load_region()
-
-        # Display a region selector widget using Streamlit
-        selected_region = st.selectbox("Select your preferred region:", wine_regions_df['region_1'].unique())
-        return selected_region
+    global global_country
+    global global_aroma_options
+    df = load_data()
 
     st.title("Wine Survey")
 
     # Price range selector
     st.header("Price Range")
-    price_range = st.slider("Select your preferred price range:", min_value=0, max_value=100, value=(10, 50), step=1)
+    price_df, price_min, price_max = load_price(df)
+    price_range = st.slider("Select your preferred price range:", min_value=int(price_min), max_value=int(price_max), value=(10, 50), step=1)
 
     # Wine preference section
     st.header("Wine Preference")
-    wine_preference = st.radio("Select your wine preference:", ['White', 'Red'])
+    wine_preference = st.radio("Select your wine preference:", ['White', 'Red', 'Rosé', 'Sparkling'])
 
-    #Region selection
-    st.header("Region Selector")
-    selected_region = region_selector()
-    st.write(f"Selected Region: {selected_region}")
+    #Country selection
+    st.header("Country Selector")
+    selected_country = country_selector()
+    st.write(f"Selected Country: {selected_country}")
 
     # Flavor options section
     st.header("Flavor Options")
-    flavour_options = st.multiselect("Select your preferred flavor options:", ['Fruity', 'Floral', 'Herbal', 'Earthy'])
-
-    # Dryness options section
-    st.header("Dryness Options")
-    dryness_options = st.multiselect("Select your preferred dryness options:", ['Sweet', 'Off-Dry', 'Medium Dry', 'Dry'])
+    aroma_options = st.multiselect("Select your preferred flavor options:", ['Fruity', 'Floral', 'Herbal', 'Earthy'])
 
     # Submit button
-    st.button("Submit", on_click=lambda: submit_survey(price_range, wine_preference, selected_region, flavour_options, dryness_options))
+    st.button("Submit", on_click=lambda: submit_survey(price_range, wine_preference, selected_country, aroma_options))
