@@ -2,7 +2,7 @@
 import json
 import pandas as pd
 import streamlit as st
-from interface.data import load_data, load_country, load_price, load_designation
+from interface.data import load_data, load_type, load_country, load_price, load_designation
 from gensim.models import Word2Vec
 from gensim.models import KeyedVectors
 
@@ -48,13 +48,15 @@ def suggest_wines():
 
     # Loading dataset as needed to find the right suggestion
     df = load_data()
-    price_column, min_price, max_price = load_price(df)
+    price_column= load_price(df)
+
 
     # Filter the main dataset with the given input the user has given
     suggestion_df = df[
         (load_country(df) == selected_country) &
         (price_column >= price_range[0]) &
-        (price_column <= price_range[1])
+        (price_column <= price_range[1]) &
+        (load_type(df) == wine_preference)
     ]
 
     # Ensure there are at least 3 suggestions
@@ -74,8 +76,6 @@ def suggest_wines():
 
     return recommendations, descriptions, prices
 
-
-
 #Once the survey has been submitted...
 def submit_survey(price_range, wine_preference, selected_country, aroma_options):
     #...we store the variables in our global variables to be used across the pages
@@ -83,53 +83,17 @@ def submit_survey(price_range, wine_preference, selected_country, aroma_options)
     #set to result to go to result page
     st.session_state.page = 'result'
 
+# Define the show additional suggestions button function with an initial state
+def suggest_button():
+    label = "Hide additional suggestions" if st.session_state.show_additional_suggestions else "Show additional suggestions"
+    return st.button("Show additional suggestions", key="additional_suggestions_button", on_click=suggest_set)
 
-# # This is base code + Word2Vec
-# def suggest_wines():
-#     # Access variables from the global scope
-#     price_range = global_price_range
-#     wine_preference = global_wine_preference
-#     selected_country = global_country
-#     aroma_options = global_aroma_options
+# Function to toggle the state of additional suggestions
+def suggest_set():
+    st.session_state.show_additional_suggestions = not st.session_state.show_additional_suggestions
+    return st.session_state.show_additional_suggestions
 
-#     recommendations = []
 
-#     # Loading dataset as needed to find the right suggestion
-#     dataset_path = '~/code/sabrinaauger/wino/raw_data/winemag-data_first150k.csv'
-#     wine_df = pd.read_csv(dataset_path)
-
-#     # Load aroma options data from JSON files
-#     aroma_keywords = []
-#     for aroma_option in aroma_options:
-#         aroma_file_path = f'aromas/{aroma_option.lower()}.json'
-#         with open(aroma_file_path, 'r') as f:
-#             aroma_data = json.load(f)
-#             aroma_keywords.extend(aroma_data)
-
-#     # We filter the main dataset with the given input the user has given
-#     suggestion_df = wine_df[
-#         (wine_df['country'] == selected_country) &
-#         (wine_df['price'] >= price_range[0]) &
-#         (wine_df['price'] <= price_range[1])
-#     ]
-
-#     # Ensure there are at least 3 suggestions
-#     if not suggestion_df.empty:
-#         # Filter the dataset based on semantic similarity in 'description' column
-#         matching_wines = []
-#         for _, wine_row in suggestion_df.iterrows():
-#             description_words = set(wine_row['description'].lower().split())
-#             for aroma_keyword in aroma_keywords:
-#                 if any(word in word2vec_model and word2vec_model.similarity(word, aroma_keyword) > 0.7 for word in description_words):
-#                     matching_wines.append(wine_row['variety'])
-#                     break
-
-#             if len(matching_wines) >= 3:
-#                 break
-
-#         recommendations = matching_wines[:3] if matching_wines else ["No available options. Please retry 🍷."]
-#     else:
-#         # If no wines match the criteria, provide a generic suggestion
-#         recommendations = [f"No wines found in the specified price range and country ({selected_country}, {price_range[0]} - {price_range[1]})"]
-
-#     return recommendations
+#Define the redo survey button
+def redo_survey():
+    st.button("Redo the survey", on_click=set_page_to_welcome)
