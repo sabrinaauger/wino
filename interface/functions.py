@@ -38,6 +38,52 @@ def country_selector():
     selected_country = st.selectbox("Select your preferred country:", df.unique())
     return selected_country
 
+# This is base suggest_wines() with price and country only
+def suggest_wines():
+    # Access variables from the global scope
+    price_range = global_price_range
+    wine_preference = global_wine_preference
+    selected_country = global_country
+    aroma_options = global_aroma_options
+
+    # Loading dataset as needed to find the right suggestion
+    df = load_data()
+    price_column, min_price, max_price = load_price(df)
+
+    # Filter the main dataset with the given input the user has given
+    suggestion_df = df[
+        (load_country(df) == selected_country) &
+        (price_column >= price_range[0]) &
+        (price_column <= price_range[1])
+    ]
+
+    # Ensure there are at least 3 suggestions
+    if not suggestion_df.empty:
+        # Sort the dataset based on 'points' in descending order
+        suggestion_df = suggestion_df.sort_values(by='points', ascending=False)
+
+        # Extract wine varieties, descriptions, and prices from the filtered and sorted dataset
+        recommendations = load_designation(suggestion_df).unique()[:3].tolist()
+        descriptions = suggestion_df['description'][:3].tolist()
+        prices = suggestion_df['price'][:3].tolist()
+    else:
+        # If no wines match the criteria, provide a generic suggestion for each element
+        recommendations = ["No matching options available. Please try again 🍷."]
+        descriptions = ["No matching options available. Please try again 🍷."]
+        prices = ["No matching options available. Please try again 🍷."]
+
+    return recommendations, descriptions, prices
+
+
+
+#Once the survey has been submitted...
+def submit_survey(price_range, wine_preference, selected_country, aroma_options):
+    #...we store the variables in our global variables to be used across the pages
+    set_global_variables(price_range,wine_preference, selected_country, aroma_options)
+    #set to result to go to result page
+    st.session_state.page = 'result'
+
+
 # # This is base code + Word2Vec
 # def suggest_wines():
 #     # Access variables from the global scope
@@ -87,44 +133,3 @@ def country_selector():
 #         recommendations = [f"No wines found in the specified price range and country ({selected_country}, {price_range[0]} - {price_range[1]})"]
 
 #     return recommendations
-
-# This is base suggest_wines() with price and country only
-def suggest_wines():
-    # Access variables from the global scope
-    price_range = global_price_range
-    wine_preference = global_wine_preference
-    selected_country = global_country
-    aroma_options = global_aroma_options
-
-    # Loading dataset as needed to find the right suggestion
-    df = load_data()
-    price_column, min_price, max_price = load_price(df)
-    # Filter the main dataset with the given input the user has given
-    suggestion_df = df[
-        (load_country(df) == selected_country) &
-        (price_column >= price_range[0]) &
-        (price_column <= price_range[1])
-    ]
-    choice = load_designation(suggestion_df)
-    recommendations = []
-
-    # Ensure there are at least 3 suggestions
-    if not suggestion_df.empty:
-        # Sort the dataset based on 'points' in descending order
-        suggestion_df = suggestion_df.sort_values(by='points', ascending=False)
-
-        # Extract wine varieties from the filtered and sorted dataset
-        recommendations = choice.unique()[:3].tolist()
-    else:
-        # If no wines match the criteria, provide a generic suggestion
-        recommendations = ["No matching options available. Please try again 🍷."]
-
-    return recommendations
-
-
-#Once the survey has been submitted...
-def submit_survey(price_range, wine_preference, selected_country, aroma_options):
-    #...we store the variables in our global variables to be used across the pages
-    set_global_variables(price_range,wine_preference, selected_country, aroma_options)
-    #set to result to go to result page
-    st.session_state.page = 'result'

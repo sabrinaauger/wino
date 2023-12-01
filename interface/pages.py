@@ -24,30 +24,37 @@ def survey_page():
 
 def wine_result_page():
     # Show a loading spinner while the suggestions are being generated
-    with st.spinner("Loading suggestions..."):
+    with st.spinner("Loading recommendations..."):
         # Get wine suggestions
-        suggestions = suggest_wines()
+        recommendations, descriptions, prices = suggest_wines()
 
         # Display the suggestions
         st.header("Suggested Wines:")
-        if not suggestions:
+        if not recommendations:
             st.write("No available options. Please retry 🍷.")
         else:
-            # Display the first suggestion
+            # Display the first suggestion, price, and description
             st.subheader("Suggested Wine 1:")
-            st.write(suggestions[0])
+            st.write(f"Recommendation: {recommendations[0]}")
+            st.write(f"Price: {prices[0]}")
+            st.write(f"Description: {descriptions[0]}")
+            st.write()
 
             # Check if there are additional suggestions to show
-            if len(suggestions) > 1:
+            if len(recommendations) > 1:
                 # Button to show additional suggestions
                 if st.button("Show additional suggestions"):
-                    # Display the second suggestion
+                    # Display the second suggestion, price, and description
                     st.subheader("Suggested Wine 2:")
-                    st.write(suggestions[1])
+                    st.write(f"Recommendation: {recommendations[1]}")
+                    st.write(f"Price: {prices[1]}")
+                    st.write(f"Description: {descriptions[1]}")
 
-                    # Display the third suggestion
+                    # Display the third suggestion, price, and description
                     st.subheader("Suggested Wine 3:")
-                    st.write(suggestions[2])
+                    st.write(f"Recommendation: {recommendations[2]}")
+                    st.write(f"Price: {prices[2]}")
+                    st.write(f"Description: {descriptions[2]}")
 
     # Redo survey button
     st.button("Redo the survey", on_click=set_page_to_welcome)
