@@ -165,6 +165,9 @@ cython_debug/
 # our own files and folders not being updated willingly
 ##############
 
+*.csv
+*.xlsx
+data/
 raw_data/
 # macOs add on
 .DS_Store
