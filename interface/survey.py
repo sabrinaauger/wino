@@ -1,5 +1,3 @@
-# survey.py
-
 import streamlit as st
 from interface.functions import submit_survey, country_selector, set_global_variables
 from interface.data import load_data, load_price_minmax

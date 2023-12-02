@@ -30,7 +30,7 @@ def wine_result_page():
     # Show a loading spinner while the suggestions are being generated
     with st.spinner("Loading recommendations..."):
         # Get wine suggestions
-        suggestion, recommendations, descriptions, prices = suggest_wines()
+        suggestion, recommendations, aromas, prices = suggest_wines()
 
         # Display the suggestions
         st.header("Suggested Wines:")
@@ -41,7 +41,7 @@ def wine_result_page():
             st.subheader("Suggested Wine 1:")
             st.write(f"Recommendation: {recommendations[0]}")
             st.write(f"Price: ${prices[0]}")
-            st.write(f"Description: {descriptions[0]}")
+            st.write(f"Aroma: {aromas[0]}")
 
            # Check if there are additional suggestions to show
         if len(recommendations) > 1:
@@ -51,13 +51,13 @@ def wine_result_page():
                 st.subheader("Suggested Wine 2:")
                 st.write(f"Recommendation: {recommendations[1]}")
                 st.write(f"Price: ${prices[1]}")
-                st.write(f"Description: {descriptions[1]}")
+                st.write(f"Aroma: {aromas[1]}")
 
                 # Display the third suggestion, price, and description
                 st.subheader("Suggested Wine 3:")
                 st.write(f"Recommendation: {recommendations[2]}")
                 st.write(f"Price: ${prices[2]}")
-                st.write(f"Description: {descriptions[2]}")
+                st.write(f"Aroma: {aromas[2]}")
 
                 # Hide the "Show additional suggestions" button after clicking
                 st.session_state.show_additional_suggestions = False

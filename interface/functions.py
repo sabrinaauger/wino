@@ -2,9 +2,11 @@
 import json
 import pandas as pd
 import streamlit as st
-from interface.data import load_data, load_type, load_country, load_price, load_designation, load_sweet, load_aroma
-from gensim.models import Word2Vec
-from gensim.models import KeyedVectors
+from interface.data import (
+    load_data, load_type, load_country, load_price, load_designation, load_sweet, load_aroma
+)
+from gensim.models import Word2Vec, KeyedVectors
+
 
 #Set page to survey
 def set_page_to_survey():
@@ -55,7 +57,7 @@ def suggest_wines():
         (wine_price >= price_range[0]) &
         (wine_price <= price_range[1]) &
         (load_sweet(df) == sweet_option) &
-        # (load_aroma(df) == aroma_options) &
+        (load_aroma(df).isin(aroma_options)) &
         (load_type(df) == wine_preference)
     ]
 
@@ -66,15 +68,15 @@ def suggest_wines():
 
         # Extract wine varieties, descriptions, and prices from the filtered and sorted dataset
         recommendations = load_designation(suggestion_df).unique()[:3].tolist()
-        descriptions = suggestion_df['description'][:3].tolist()
+        aromas = suggestion_df['aroma'][:3].tolist()
         prices = suggestion_df['price'][:3].tolist()
     else:
         # If no wines match the criteria, provide a generic suggestion for each element
         recommendations = ["N/A"]
-        descriptions = ["N/A"]
+        aromas = ["N/A"]
         prices = ["N/A"]
 
-    return suggestion_df, recommendations, descriptions, prices
+    return suggestion_df, recommendations, aromas, prices
 
 #Once the survey has been submitted...
 def submit_survey(price_range, wine_preference, selected_country, aroma_options, sweet_option):
@@ -92,7 +94,6 @@ def suggest_button():
 def suggest_set():
     st.session_state.show_additional_suggestions = not st.session_state.show_additional_suggestions
     return st.session_state.show_additional_suggestions
-
 
 #Define the redo survey button
 def redo_survey():
