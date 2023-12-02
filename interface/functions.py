@@ -2,13 +2,9 @@
 import json
 import pandas as pd
 import streamlit as st
-from interface.data import load_data, load_type, load_country, load_price, load_designation
+from interface.data import load_data, load_type, load_country, load_price, load_designation, load_sweet, load_aroma
 from gensim.models import Word2Vec
 from gensim.models import KeyedVectors
-
-# Load Word2Vec model
-# model_path = 'path/to/your/word2vec/model.bin'
-# word2vec_model = KeyedVectors.load_word2vec_format(model_path, binary=True)
 
 #Set page to survey
 def set_page_to_survey():
@@ -18,16 +14,18 @@ def set_page_to_welcome():
     st.session_state.page = 'welcome'
 
 #store the variables in our global variables to be used across the pages
-def set_global_variables(price_range, wine_preference, selected_country, aroma_options):
+def set_global_variables(price_range, wine_preference, selected_country, aroma_options, sweet_option):
     global global_price_range
     global global_wine_preference
     global global_country
     global global_aroma_options
+    global global_sweet_option
 
     global_price_range = price_range
     global_wine_preference = wine_preference
     global_country = selected_country
     global_aroma_options = aroma_options
+    global_sweet_option = sweet_option
 
 # Region selector function
 def country_selector():
@@ -45,17 +43,19 @@ def suggest_wines():
     wine_preference = global_wine_preference
     selected_country = global_country
     aroma_options = global_aroma_options
+    sweet_option = global_sweet_option
 
     # Loading dataset as needed to find the right suggestion
     df = load_data()
-    price_column= load_price(df)
-
+    wine_price= load_price(df)
 
     # Filter the main dataset with the given input the user has given
     suggestion_df = df[
         (load_country(df) == selected_country) &
-        (price_column >= price_range[0]) &
-        (price_column <= price_range[1]) &
+        (wine_price >= price_range[0]) &
+        (wine_price <= price_range[1]) &
+        (load_sweet(df) == sweet_option) &
+        # (load_aroma(df) == aroma_options) &
         (load_type(df) == wine_preference)
     ]
 
@@ -70,16 +70,16 @@ def suggest_wines():
         prices = suggestion_df['price'][:3].tolist()
     else:
         # If no wines match the criteria, provide a generic suggestion for each element
-        recommendations = ["No matching options available. Please try again 🍷."]
-        descriptions = ["No matching options available. Please try again 🍷."]
-        prices = ["No matching options available. Please try again 🍷."]
+        recommendations = ["N/A"]
+        descriptions = ["N/A"]
+        prices = ["N/A"]
 
-    return recommendations, descriptions, prices
+    return suggestion_df, recommendations, descriptions, prices
 
 #Once the survey has been submitted...
-def submit_survey(price_range, wine_preference, selected_country, aroma_options):
+def submit_survey(price_range, wine_preference, selected_country, aroma_options, sweet_option):
     #...we store the variables in our global variables to be used across the pages
-    set_global_variables(price_range,wine_preference, selected_country, aroma_options)
+    set_global_variables(price_range,wine_preference, selected_country, aroma_options, sweet_option)
     #set to result to go to result page
     st.session_state.page = 'result'
 
