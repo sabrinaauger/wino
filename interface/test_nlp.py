@@ -8,7 +8,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 nlp = spacy.load("en_core_web_sm")
 
 # Load the dataset
-data_path = '~/code/sabrinaauger/wino/interface/wine_reviews.csv'
+data_path = '~/code/sabrinaauger/wino/data/clean_data/wine_reviews.csv'
 df = pd.read_csv(data_path)
 
 # Select the 'description' column
