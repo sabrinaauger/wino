@@ -43,7 +43,7 @@ def load_aroma(df):
 # Creating function that loads the designation from a wine dataset
 @st.cache_data
 def load_designation(df):
-    variety_column = df['variety']
+    variety_column = df['title']
     return variety_column
 
 # Creating function to return the minimum and the maximum price value of the wine dataset
