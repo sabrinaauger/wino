@@ -14,6 +14,9 @@ def welcome_page():
         - Get a personalized wine recommendation based on your choices.
         - Discover new wines that match your taste!
     """)
+
+    cat_gif = "https://media.tenor.com/oiW1k6gAvNwAAAAd/cat-red-wine.gif"
+    st.image(cat_gif, caption="Sometimes, it's best to just enjoy the moment... with some drinks 🙃", use_column_width=True)
     #Click on button to set page to survey which sends user to survey page
     st.button("Get Started", on_click=set_page_to_survey)
 
@@ -34,16 +37,19 @@ def wine_result_page():
 
         # Display the suggestions
         st.header(f"Suggested {aroma_chosen} Wines from {country_chosen}:")
-        if len(recommendations) == 0:
-            st.write("No available options. Please retry. 🍷")
-        else:
+        if recommendations[0] == "N/A":
+            st.write("No available options.")
+        elif recommendations[0] != "N/A":
             # Display the first suggestion, price, and description
+            st.write(len(recommendations))
+
             st.subheader("Suggested Wine 1:")
             st.write(f"Recommendation: {recommendations[0]}")
             st.write(f"Variety: {variety[0]}")
             st.write(f"Price: ${prices[0]}")
             st.write(f"{description[0]}")
-
+            drunk_gif = "https://media.tenor.com/Q399o5To0UsAAAAj/queondapa.gif"
+            st.image(drunk_gif, caption="We got something!", use_column_width=True)
            # Check if there are additional suggestions to show
         if len(recommendations) > 1:
         # Button to show additional suggestions
@@ -62,10 +68,13 @@ def wine_result_page():
                 st.write(f"Price: ${prices[2]}")
                 st.write(f"{description[2]}")
 
+                drunker_gif = "https://media.tenor.com/FR32Y0FB6RgAAAAC/bruh-moment-fall.gif"
+                st.image(drunker_gif, caption="We got even more!", use_column_width=True)
                 # Hide the "Show additional suggestions" button after clicking
                 st.session_state.show_additional_suggestions = False
         else:
             st.subheader("No other suggestions available. Please retry with different settings for more suggestions. 🍷")
-
+            emote_url = "https://i.kym-cdn.com/photos/images/original/000/325/934/060.png"
+            st.image(emote_url, caption="You could've done better in your choices.", use_column_width=True)
     # Redo survey button
     redo_survey()
