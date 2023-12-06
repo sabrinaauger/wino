@@ -37,3 +37,7 @@ def wine_survey_page():
     # Submit button
     submit_button_key = "submit_button_key"
     st.button("Submit", key=submit_button_key, on_click=lambda: submit_survey(price_range, wine_preference, selected_country, aroma_options, sweet_option))
+
+    #Test gif for the survey page
+    gif_url = "https://cdn.dribbble.com/users/43342/screenshots/1086690/media/6943db96c8ea7f3dea2314238e1a7fbd.gif"
+    st.image(gif_url, caption='Image from URL', use_column_width=True)

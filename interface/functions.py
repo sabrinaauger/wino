@@ -3,6 +3,7 @@ import streamlit as st
 from interface.data import (
     load_data, load_type, load_country, load_price, load_sweet, load_aroma
 )
+from gensim.models import Word2Vec, KeyedVectors
 
 
 #Set page to survey
