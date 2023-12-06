@@ -33,13 +33,13 @@ def wine_result_page():
         description, recommendations, country_chosen, variety, aroma_chosen, prices = suggest_wines()
 
         # Display the suggestions
-        st.header(f"Suggested {aroma_chosen} Wines:")
+        st.header(f"Suggested {aroma_chosen} Wines from {country_chosen}:")
         if len(recommendations) == 0:
             st.write("No available options. Please retry. 🍷")
         else:
             # Display the first suggestion, price, and description
             st.subheader("Suggested Wine 1:")
-            st.write(f"Recommendation: {recommendations[0]} from {country_chosen}")
+            st.write(f"Recommendation: {recommendations[0]}")
             st.write(f"Variety: {variety[0]}")
             st.write(f"Price: ${prices[0]}")
             st.write(f"{description[0]}")
@@ -50,14 +50,14 @@ def wine_result_page():
             if suggest_button():
                 # Display the second suggestion, price, and description
                 st.subheader("Suggested Wine 2:")
-                st.write(f"Recommendation: {recommendations[1]} from {country_chosen}")
+                st.write(f"Recommendation: {recommendations[1]}")
                 st.write(f"Variety: {variety[1]}")
                 st.write(f"Price: ${prices[1]}")
                 st.write(f"{description[1]}")
 
                 # Display the third suggestion, price, and description
                 st.subheader("Suggested Wine 3:")
-                st.write(f"Recommendation: {recommendations[2]} from {country_chosen}")
+                st.write(f"Recommendation: {recommendations[2]}")
                 st.write(f"Variety: {variety[2]}")
                 st.write(f"Price: ${prices[2]}")
                 st.write(f"{description[2]}")
