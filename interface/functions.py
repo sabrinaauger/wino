@@ -1,11 +1,8 @@
 # Many imports for functions for other pages, but also a few for similar semantics for tokens
-import json
-import pandas as pd
 import streamlit as st
 from interface.data import (
-    load_data, load_type, load_country, load_price, load_designation, load_sweet, load_aroma
+    load_data, load_type, load_country, load_price, load_sweet, load_aroma
 )
-from gensim.models import Word2Vec, KeyedVectors
 
 
 #Set page to survey
@@ -34,8 +31,21 @@ def country_selector():
     # Load data then get the country column from df
     df = load_country(load_data())
 
+    # Extract unique countries and sort them alphabetically
+    unique_countries = df.unique().tolist()
+    unique_countries.sort()
+
+    # Move 'Canada' and 'USA' to the beginning of the list
+    if 'Canada' in unique_countries:
+        unique_countries.remove('Canada')
+        unique_countries.insert(0, 'Canada')
+
+    if 'USA' in unique_countries:
+        unique_countries.remove('USA')
+        unique_countries.insert(1, 'USA')
+
     # Display a region selector widget using Streamlit
-    selected_country = st.selectbox("Select your preferred country:", df.unique())
+    selected_country = st.selectbox("Select your preferred country:", unique_countries)
     return selected_country
 
 # This is base suggest_wines() with price and country only
@@ -66,17 +76,34 @@ def suggest_wines():
         # Sort the dataset based on 'points' in descending order
         suggestion_df = suggestion_df.sort_values(by='points', ascending=False)
 
-        # Extract wine varieties, descriptions, and prices from the filtered and sorted dataset
-        recommendations = load_designation(suggestion_df).unique()[:3].tolist()
-        aromas = suggestion_df['aroma'][:3].tolist()
-        prices = suggestion_df['price'][:3].tolist()
+        # Deduplicate based on 'title'
+        suggestion_df = suggestion_df.drop_duplicates(subset='title')
+
+        # Extract unique titles
+        unique_recommendations_titles = suggestion_df['title'].unique()[:3]
+
+        # Filter the dataset based on unique titles
+        unique_recommendations_data = suggestion_df[suggestion_df['title'].isin(unique_recommendations_titles)]
+
+        # Extracting specific information for each recommendation
+        recommendations = unique_recommendations_data['title'].tolist()
+        variety = unique_recommendations_data['wine_variety'].tolist()
+        description = unique_recommendations_data['description'].tolist()
+        prices = unique_recommendations_data['price'].tolist()
+        aroma_chosen = aroma_options[0]
+        country_chosen = selected_country
+
+
     else:
         # If no wines match the criteria, provide a generic suggestion for each element
         recommendations = ["N/A"]
-        aromas = ["N/A"]
+        variety = ["N/A"]
+        description = ["N/A"]
         prices = ["N/A"]
+        aroma_chosen = aroma_options[0]
+        country_chosen = selected_country
 
-    return suggestion_df, recommendations, aromas, prices
+    return description, recommendations, country_chosen, variety, aroma_chosen, prices
 
 #Once the survey has been submitted...
 def submit_survey(price_range, wine_preference, selected_country, aroma_options, sweet_option):
