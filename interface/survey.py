@@ -10,7 +10,11 @@ def wine_survey_page():
     #load data
     df = load_survey_data()
 
-    st.title("Wine Survey")
+    st.title("What kind of wine would you like to try?")
+
+    #Test gif for the survey page
+    gif_url = "https://cdn.dribbble.com/users/43342/screenshots/1086690/media/6943db96c8ea7f3dea2314238e1a7fbd.gif"
+    st.image(gif_url, caption="There's so many choices! Which one do I choose?", use_column_width=True)
 
     # Price range selector
     st.header("Price Range")
