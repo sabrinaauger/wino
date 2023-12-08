@@ -19,7 +19,7 @@ def wine_survey_page():
     # Price range selector
     st.header("Price Range")
     price_min, price_max = load_price_minmax(df)
-    price_range = st.slider("Select your preferred price range:", min_value=int(price_min), max_value=int(price_max), value=(10, 50), step=1)
+    price_range = st.slider("Select your preferred price range:", min_value=int(price_min), max_value=int(price_max), value=(4, 1650), step=1)
 
     # Wine preference section
     st.header("Wine Preference")
@@ -41,3 +41,6 @@ def wine_survey_page():
     # Submit button
     submit_button_key = "submit_button_key"
     st.button("Submit", key=submit_button_key, on_click=lambda: submit_survey(price_range, wine_preference, selected_country, aroma_options, sweet_option))
+
+
+# https://chat.openai.com/c/d15bf96a-f1c3-49d8-8791-8500edabf654

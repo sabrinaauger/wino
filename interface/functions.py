@@ -3,8 +3,6 @@ import streamlit as st
 from interface.data import (
     load_data, load_type, load_country, load_price, load_sweet, load_aroma
 )
-from gensim.models import Word2Vec, KeyedVectors
-
 
 #Set page to survey
 def set_page_to_survey():
@@ -91,7 +89,7 @@ def suggest_wines():
         variety = unique_recommendations_data['wine_variety'].tolist()
         description = unique_recommendations_data['description'].tolist()
         prices = unique_recommendations_data['price'].tolist()
-        aroma_chosen = aroma_options[0]
+        aroma_chosen = aroma_options
         country_chosen = selected_country
 
 
@@ -101,7 +99,7 @@ def suggest_wines():
         variety = ["N/A"]
         description = ["N/A"]
         prices = ["N/A"]
-        aroma_chosen = aroma_options[0]
+        aroma_chosen = aroma_options
         country_chosen = selected_country
 
     return description, recommendations, country_chosen, variety, aroma_chosen, prices
