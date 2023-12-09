@@ -1,5 +1,6 @@
+
 import streamlit as st
-from interface.functions import submit_survey, country_selector, set_global_variables
+from interface.functions import submit_survey, country_selector
 from interface.data import load_data, load_price_minmax
 
 #Load dataset from cache
@@ -41,6 +42,3 @@ def wine_survey_page():
     # Submit button
     submit_button_key = "submit_button_key"
     st.button("Submit", key=submit_button_key, on_click=lambda: submit_survey(price_range, wine_preference, selected_country, aroma_options, sweet_option))
-
-
-# https://chat.openai.com/c/d15bf96a-f1c3-49d8-8791-8500edabf654
