@@ -1,0 +1,2 @@
+data/cleaned_data/wine_reviews_df.csv filter=lfs diff=lfs merge=lfs -text
+*.csv filter=lfs diff=lfs merge=lfs -text
