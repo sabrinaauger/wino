@@ -1,51 +1,88 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
-from sklearn.preprocessing import LabelEncoder
-from data import load_data
+from interface.data import load_data
 import pandas as pd
+import pickle
 
-# Assuming 'df' is your DataFrame containing the dataset
-# # Load data
+# Load data
 data = load_data()
 df = pd.DataFrame(data)
-# Preprocess categorical variables
-label_encoder = LabelEncoder()
-df['wine_type'] = label_encoder.fit_transform(df['wine_type'])
-df['country'] = label_encoder.fit_transform(df['country'])
-df['aroma'] = label_encoder.fit_transform(df['aroma'])
-df['dry_sweet'] = label_encoder.fit_transform(df['dry_sweet'])
+#df = df.head(5000)
 
 # Feature engineering for text data
-tfidf_vectorizer = TfidfVectorizer(stop_words='english')
+tfidf_vectorizer = TfidfVectorizer(stop_words='english', max_features=500)
 tfidf_matrix = tfidf_vectorizer.fit_transform(df['preproc_description'])
 
-# Combine numerical and text features
-combined_matrix = tfidf_matrix  # You can concatenate other numerical features as well
+# Save the TF-IDF vectorizer and matrix using pickle
+with open('tfidf_vectorizer.pkl', 'wb') as f:
+    pickle.dump(tfidf_vectorizer, f)
 
-# Train a similarity-based model
-cosine_sim = linear_kernel(combined_matrix, combined_matrix)
+with open('tfidf_matrix.pkl', 'wb') as f:
+    pickle.dump(tfidf_matrix, f)
 
-# Function to get recommendations based on user input
+# Function to load the saved TF-IDF vectorizer and matrix
+def load_tfidf():
+    with open('tfidf_vectorizer.pkl', 'rb') as f:
+        vectorizer = pickle.load(f)
+
+    with open('tfidf_matrix.pkl', 'rb') as f:
+        matrix = pickle.load(f)
+
+    return vectorizer, matrix
+
+# Train a similarity-based model using the loaded TF-IDF matrix
+def train_similarity_model():
+    vectorizer, matrix = load_tfidf()
+    cosine_sim = linear_kernel(matrix, matrix)
+    return cosine_sim
+
+# Function to get recommendations based on user input using the pre-trained model
 def get_recommendations(user_input):
-    user_input_encoded = label_encoder.transform([user_input['wine_type']])[0]
-    # Repeat for other categorical variables in user input
+    # Load data
+    df = load_data()
 
-    # Combine user input with existing data
-    user_input_matrix = tfidf_vectorizer.transform([user_input['preproc_description']])
-    combined_user_matrix = user_input_matrix  # You can concatenate other numerical features as well
+    # Filter dataset based on user preferences
+    wine_type = user_input['wine_type']
+    country = user_input['country']
+    min_price, max_price = user_input['price']
 
-    # Calculate cosine similarity between user input and existing data
-    similarity_scores = linear_kernel(combined_user_matrix, combined_matrix).flatten()
+    # Filter recommendations based on user preferences
+    filtered_recommendations = df[
+        (df['wine_type'] == wine_type) &
+        (df['price'] >= min_price) &  # Filter by minimum price
+        (df['price'] <= max_price) &
+        (df['country']==country)
+    ]
 
-    # Get indices of top recommendations
-    top_indices = similarity_scores.argsort()[:-6:-1]
+    # If no matches found after filtering, return None or an appropriate message
+    if filtered_recommendations.empty:
+        return None
 
-    # Return recommended items
-    return df.iloc[top_indices]
+    # Use the machine learning model to suggest wines
+    vectorizer, matrix = load_tfidf()
+    user_input_matrix = vectorizer.transform([user_input['preproc_description']])
+    similarity_scores = linear_kernel(user_input_matrix, matrix[filtered_recommendations.index]).flatten()
+    top_indices = similarity_scores.argsort()[:-15:-1]  # Retrieve top 5 indices
 
-# Example user input
-user_input = {'wine_type': 'Red', 'preproc_description': 'fruity and smooth', 'country': 'France', 'dry_sweet': 'Dry', 'aroma': 'Fruity', 'price': 30}
+    recommendations = filtered_recommendations.iloc[top_indices]
 
-# Get recommendations
-recommendations = get_recommendations(user_input)
-print(recommendations[['country', 'description', 'points', 'price', 'title', 'wine_type', 'dry_sweet', 'aroma']])
+    # If no matches found after filtering and similarity scoring, return None or an appropriate message
+    if recommendations.empty:
+        return None
+
+    # Otherwise, return the top recommendations based on some criteria (e.g., highest ratings)
+    top_recommendations = recommendations.nlargest(10, 'points')  # Retrieve top 10 recommendations
+
+    return top_recommendations
+
+# user_input = {
+#     'wine_type': 'White',
+#     'preproc_description': 'Floral and Fruity',
+#     'country': 'France',
+#     'dry_sweet': 'Dry',
+#     'aroma': 'Floral',
+#     'price': (1000, 3000)  # Set the price as a tuple containing the minimum and maximum values
+# }
+
+# result=pd.DataFrame(get_recommendations(user_input))
+# print(result['title'])
