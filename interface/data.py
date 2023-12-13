@@ -3,7 +3,6 @@ import pandas as pd
 # import streamlit as st
 # import pickle
 # import gdown
-# import os
 
 # #Function to download the dataset from Google Drive
 # @st.cache_data
@@ -23,19 +22,20 @@ import pandas as pd
 
 # Function to load the main dataset used
 def load_data():
-    csv_path = "/Users/sabrinaauger/code/sabrinaauger/wino/data/cleaned_data/wine_reviews_df.csv"  # Replace with the actual path to your CSV file
+    csv_path = "data/cleaned_data/wine_reviews.csv"  # Replace with the actual path to your CSV file
     # csv_path ='https://raw.githubusercontent.com/sabrinaauger/wino/master/data/cleaned_data/wine_reviews_df.csv'
+    # print(f"CSV Path: {csv_path}")
     data_load = pd.read_csv(csv_path)
 
     # Convert 'price' column to numeric type
-    data_load['price'] = pd.to_numeric(data_load['price'], errors='coerce')  # Assuming 'price' column contains numeric values
+    # data_load['price'] = pd.to_numeric(data_load['price'], errors='coerce')  # Assuming 'price' column contains numeric values
 
     return data_load
 
 def load_chunkdata(chunk_size):
-    csv_path = "/Users/sabrinaauger/code/sabrinaauger/wino/data/cleaned_data/wine_reviews_df.csv"
+    csv_path = "data/cleaned_data/wine_reviews_df.csv"
     # Replace with the actual path to github repository
-    #csv_path ='https://raw.githubusercontent.com/sabrinaauger/wino/master/data/cleaned_data/wine_reviews_df.csv'
+    # csv_path ='https://raw.githubusercontent.com/sabrinaauger/wino/master/data/cleaned_data/wine_reviews_df.csv'
     data_loader = pd.read_csv(csv_path, chunksize=chunk_size)
     return data_loader
 

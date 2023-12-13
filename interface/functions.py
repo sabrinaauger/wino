@@ -34,9 +34,9 @@ def country_selector():
         df.remove('Canada')
         df.insert(0, 'Canada')
 
-    if 'USA' in df:
-        df.remove('USA')
-        df.insert(1, 'USA')
+    if 'US' in df:
+        df.remove('US')
+        df.insert(1, 'US')
 
     # Display a region selector widget using Streamlit
     selected_country = st.selectbox("Select your preferred country:", df)
@@ -80,10 +80,10 @@ def suggest_set():
 
 # Define the redo survey button
 def redo_survey():
-    # Check if additional suggestions are displayed
-    if 'additional_suggestions_displayed' in st.session_state:
-        st.session_state.additional_suggestions_displayed = False  # Set the flag to False
+    # # Check if additional suggestions are displayed
+    # if 'additional_suggestions_displayed' in st.session_state:
+    #     st.session_state.additional_suggestions_displayed = False  # Set the flag to False
 
     # Clear session state or any other relevant variables
-    st.session_state.clear()  # Clear the session state
+    # st.session_state.clear()  # Clear the session state
     set_page_to_survey()  # Redirect to the survey page

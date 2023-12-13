@@ -1,7 +1,7 @@
 import streamlit as st
 from interface.functions import submit_survey, country_selector
 from interface.data import load_data, load_price_minmax
-from interface.model import get_recommendations
+# from interface.model import get_recommendations
 
 # Load dataset from cache
 @st.cache_data
@@ -11,7 +11,7 @@ def load_survey_data():
 def wine_survey_page():
    #Display the logo wino - the path should be changed to github path
     def display_logo():
-        st.image('/Users/sabrinaauger/code/sabrinaauger/wino/data/photo/logo.jpeg', width=170)
+        st.image('data/photo/logo.jpeg', width=170)
 
     #Load the data
     df = load_survey_data()
@@ -83,4 +83,10 @@ def wine_survey_page():
             'price': price_range  # Ensure price_range is a tuple of (min_price, max_price)
         }
         st.session_state.user_input = user_input
-        submit_survey(price_range, wine_preference, selected_country, aroma_options, sweet_option)
+        submit_survey(
+            st.session_state.user_input['price'],
+            st.session_state.user_input['wine_type'],
+            st.session_state.user_input['country'],
+            st.session_state.user_input['aroma'],
+            st.session_state.user_input['dry_sweet']
+        )

@@ -3,12 +3,12 @@ from sklearn.metrics.pairwise import linear_kernel
 from interface.data import load_data
 import pandas as pd
 import pickle
+# import streamlit as st
 
 # Load data
 data = load_data()
 df = pd.DataFrame(data)
 #df = df.head(5000)
-
 # Feature engineering for text data
 tfidf_vectorizer = TfidfVectorizer(stop_words='english', max_features=500)
 tfidf_matrix = tfidf_vectorizer.fit_transform(df['preproc_description'])
