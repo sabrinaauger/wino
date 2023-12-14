@@ -30,6 +30,10 @@ def load_data():
     # Convert 'price' column to numeric type
     data_load['price'] = pd.to_numeric(data_load['price'], errors='coerce')  # Assuming 'price' column contains numeric values
 
+    # Clean up 'wine_variety' and 'title' columns
+    data_load['wine_variety'] = data_load['wine_variety'].str.replace('Rosee', 'Rose')
+    data_load['title'] = data_load['title'].str.replace('Rosee', 'Rose')
+
     return data_load
 
 def load_chunkdata(chunk_size):
@@ -48,8 +52,7 @@ def load_type(df):
 
 # Creating function that loads the country from a wine dataset
 def load_country(df):
-    # Load your dataset (adjust the path and format accordingly)
-    print(df)
+    # Load your dataset
     country_column = df['country'].unique().tolist()
     country_column.append("I don't know")
     return country_column

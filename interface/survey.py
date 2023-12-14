@@ -51,7 +51,10 @@ def wine_survey_page():
 
     st.header("Flavor Options")
     aroma_options = st.multiselect("Select your preferred flavor options:", ['Fruity', 'Floral', 'Herbal', 'Earthy'])
-    st.session_state.aroma_options = aroma_options
+    if len(aroma_options) == 0:
+        st.error("Please choose a flavor to get a wine recommendation.")
+    else:
+        st.session_state.aroma_options = aroma_options
 
     st.header("Dryness/Sweetness preference")
     sweet_option = st.radio("Select your preferred dryness/sweetness:", ['Dry', 'Sweet', "I don't know"])
