@@ -30,6 +30,10 @@ def load_data():
     # Convert 'price' column to numeric type
     # data_load['price'] = pd.to_numeric(data_load['price'], errors='coerce')  # Assuming 'price' column contains numeric values
 
+    # Clean up 'wine_variety' and 'title' columns
+    data_load['wine_variety'] = data_load['wine_variety'].str.replace('Rosee', 'Rose')
+    data_load['title'] = data_load['title'].str.replace('Rosee', 'Rose')
+
     return data_load
 
 def load_chunkdata(chunk_size):
@@ -43,13 +47,16 @@ def load_chunkdata(chunk_size):
 #Creating function that loads the type of wine from a wine dataset
 def load_type(df):
     type_column = df['wine_type']
+    type_column.append("I don't know")
     return type_column
 
 # Creating function that loads the country from a wine dataset
 def load_country(df):
-    # Load your dataset (adjust the path and format accordingly)
+    # Load your dataset
     country_column = df['country'].unique().tolist()
+    country_column.append("I don't know")
     return country_column
+
 
 #Creating function to load price from wine dataset
 def load_price(df):
@@ -59,6 +66,7 @@ def load_price(df):
 # #Creating function to load the dry/sweet variable from wine dataset
 def load_sweet(df):
     sweet_column = df['dry_sweet']
+    sweet_column.append("I don't know")
     return sweet_column
 
 # # Creating function to load the aroma variable from wine dataset
