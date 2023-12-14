@@ -1,7 +1,7 @@
 import streamlit as st
 from interface.functions import submit_survey, country_selector, occasion_selector
 from interface.data import load_data, load_price_minmax
-from interface.model import get_recommendations
+# from interface.model import get_recommendations
 
 # Load dataset from cache
 @st.cache_data
@@ -10,7 +10,7 @@ def load_survey_data():
 
 def wine_survey_page():
     def display_logo():
-        st.image('/Users/sabrinaauger/code/sabrinaauger/wino/data/photo/logo.jpeg', width=170)
+        st.image('data/photo/logo.jpeg', width=170)
 
     # Load the data
     df = load_survey_data()

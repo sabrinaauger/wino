@@ -10,11 +10,11 @@ def display_logo_in_header():
     header = st.columns([4, 1])  # Adjust column widths
     with header[0]:
         # First logo on the left-hand side
-        st.image('/Users/sabrinaauger/code/sabrinaauger/wino/data/photo/logo.jpeg', width=170)
+        st.image('data/photo/logo.jpeg', width=170)
 
     with header[1]:
         # Second logo on the right-hand side (smaller for le wagon logo)
-        st.image('/Users/sabrinaauger/code/sabrinaauger/wino/data/photo/logowagon2.png', width=50)  # Adjust the width to make it smaller
+        st.image('data/photo/logowagon2.png', width=50)  # Adjust the width to make it smaller
 
     return st
 
@@ -46,7 +46,7 @@ def scroll_to_top():
 # Logo and title layout for welcome page
 header_st = display_logo_in_header()
 # Full-width image before "Welcome to Wino!" title
-st.image('/Users/sabrinaauger/code/sabrinaauger/wino/data/photo/image5.jpeg', caption="Life is too short to drink bad wine. So wine a bit, you'll feel better!", use_column_width=True)
+st.image('data/photo/image5.jpeg', caption="Life is too short to drink bad wine. So wine a bit, you'll feel better!", use_column_width=True)
 
 # Welcome message in a designed layout within the body
 st.markdown(
@@ -82,8 +82,6 @@ def survey_page():
     wine_survey_page()
 
 # Define result page
-# Define result page
-# Define result page
 def wine_result_page():
     header_st = display_logo_in_header()
 
@@ -101,7 +99,7 @@ def wine_result_page():
             )
 
             # Display an aesthetic image indicating enjoyment
-            enjoyment_image_url = "/Users/sabrinaauger/code/sabrinaauger/wino/data/photo/image2.jpeg"  # Replace this with the URL of your image
+            enjoyment_image_url = "data/photo/image2.jpeg"  # Replace this with the URL of your image
             st.image(enjoyment_image_url, use_column_width=True)
 
             # Separator for better section division
