@@ -4,6 +4,7 @@ from interface.survey import wine_survey_page
 from interface.data import load_data
 
 
+
 # Function to display the logo in the header
 def display_logo_in_header():
     header = st.columns([4, 1])  # Adjust column widths
@@ -116,7 +117,8 @@ def wine_result_page():
                 f"**Wine Variety:** {first_recommendation['wine_variety']} <br>"
                 f"**Price:** ${first_recommendation['price']} <br>"
                 f"**Description:** {first_recommendation['description']} <br>"
-                f"**Country:** {first_recommendation['country']}",
+                f"**Country:** {first_recommendation['country']} <br>"
+                f"**Wine type:** {first_recommendation['wine_type']}",
                 unsafe_allow_html=True
             )
 
@@ -133,7 +135,8 @@ def wine_result_page():
                             f"**Wine Variety:** {recommendation['wine_variety']} <br>"
                             f"**Price:** ${recommendation['price']} <br>"
                             f"**Description:** {recommendation['description']} <br>"
-                            f"**Country:** {recommendation['country']}",
+                            f"**Country:** {recommendation['country']}<br>"
+                            f"**Wine type:** {first_recommendation['wine_type']}",
                             unsafe_allow_html=True
                         )
 
