@@ -19,63 +19,42 @@ def display_logo_in_header():
 
 
 #Function to ensure that the page loaded displays the top of the page
-def scroll_to_top():
-    # Create an anchor at the top of the page
-    st.markdown("<div id='top'></div>")
+def welcome_page():
 
-    # JavaScript to scroll to the top of the page
-    # st.markdown(
-    #     """
-    #     <script>
-    #     // Function to scroll to the top smoothly
-    #     function scrollToTop() {
-    #         const top = document.getElementById('top');
-    #         top.scrollIntoView({ behavior: 'smooth' });
-    #     }
+    # Logo and title layout for welcome page
+    header_st = display_logo_in_header()
+    # Full-width image before "Welcome to Wino!" title
+    st.image('data/photo/image5.jpeg', caption="Life is too short to drink bad wine. So wine a bit, you'll feel better!", use_column_width=True)
 
-    #     // Check condition and scroll to top when satisfied
-    #     if (window.location.hash === '#scrollToTop') {
-    #         scrollToTop();
-    #     }
-    #     </script>
-    #     """,
-    #     unsafe_allow_html=True
-    # )
+    # Welcome message in a designed layout within the body
+    st.markdown(
+        """
+        <div style='padding: 20px; border-radius: 10px;'>
+            <h1 style='text-align: center; color: #2f4f4f;'>Welcome to Wino!</h1>
+            <p style='text-align: justify; color: #2f4f4f;'>
+                Welcome to Wino, our Wine Recommender app! This app helps you discover new wines based on your taste preferences.
+            </p>
+            <h3 style='text-align: left; color: #2f4f4f;'>Here's what you can expect:</h3>
+            <ul style='text-align: left; color: #2f4f4f;'>
+                <li>Answer a few questions about your wine preferences.</li>
+                <li>Get a personalized wine recommendation based on your choices.</li>
+                <li>Discover new wines that match your taste!</li>
+            </ul>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-# Logo and title layout for welcome page
-header_st = display_logo_in_header()
-# Full-width image before "Welcome to Wino!" title
-st.image('data/photo/image5.jpeg', caption="Life is too short to drink bad wine. So wine a bit, you'll feel better!", use_column_width=True)
-
-# Welcome message in a designed layout within the body
-st.markdown(
-    """
-    <div style='padding: 20px; border-radius: 10px;'>
-        <h1 style='text-align: center; color: #2f4f4f;'>Welcome to Wino!</h1>
-        <p style='text-align: justify; color: #2f4f4f;'>
-            Welcome to Wino, our Wine Recommender app! This app helps you discover new wines based on your taste preferences.
-        </p>
-        <h3 style='text-align: left; color: #2f4f4f;'>Here's what you can expect:</h3>
-        <ul style='text-align: left; color: #2f4f4f;'>
-            <li>Answer a few questions about your wine preferences.</li>
-            <li>Get a personalized wine recommendation based on your choices.</li>
-            <li>Discover new wines that match your taste!</li>
-        </ul>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-# Click on button to set page to survey which sends the user to the survey page
-st.button("Get Started", on_click=set_page_to_survey, key="get_started_button")
+    # Click on button to set page to survey which sends the user to the survey page
+    st.button("Get Started", on_click=set_page_to_survey, key="get_started_button")
 
 # Load data
 df = load_data()
 
 # Define welcome_page function
-def welcome_page():
-    pass
-   # scroll_to_top() # No need to redefine, as it's already defined above
+# def welcome_page():
+
+#    scroll_to_top() # No need to redefine, as it's already defined above
 
 # Define survey page
 def survey_page():
