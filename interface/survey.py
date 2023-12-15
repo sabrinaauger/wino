@@ -65,18 +65,27 @@ def wine_survey_page():
     st.write(f"Selected Occasion: {selected_occasion}")
     st.session_state.selected_occasion = selected_occasion
 
-    # Submit button
-    submit_button_key = "submit_button_key"
-    if st.button("Submit", key=submit_button_key):
-        # Store user input in session state with also the occasion
-        user_input = {
+    # Store user input in session state
+    user_input = {
             'wine_type': wine_preference,
             'preproc_description': ', '.join(aroma_options),
             'country': selected_country,
             'dry_sweet': sweet_option,
-            'aroma': aroma_options[0],
+            'aroma': aroma_options,
             'price': price_range,  # Ensure price_range is a tuple of (min_price, max_price)
             'occasion':selected_occasion
-        }
-        st.session_state.user_input = user_input
-        submit_survey(price_range, wine_preference, selected_country, aroma_options, sweet_option,selected_occasion)
+	}
+
+    #Set session state user input
+    st.session_state.user_input = user_input
+
+    # Submit button
+    submit_button_key = "submit_button_key"
+    st.button("Submit", key=submit_button_key, on_click=lambda: submit_survey(
+        st.session_state.user_input['price'],
+        st.session_state.user_input['wine_type'],
+        st.session_state.user_input['country'],
+        st.session_state.user_input['aroma'],
+        st.session_state.user_input['dry_sweet'],
+		st.session_state.user_input['occasion']
+    ))

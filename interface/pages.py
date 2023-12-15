@@ -4,7 +4,6 @@ from interface.survey import wine_survey_page
 from interface.data import load_data
 
 
-
 # Function to display the logo in the header
 def display_logo_in_header():
     header = st.columns([4, 1])  # Adjust column widths
@@ -85,98 +84,72 @@ def survey_page():
 def wine_result_page():
     header_st = display_logo_in_header()
 
-     # Call scroll_to_top function to ensure automatic scrolling to the top
+    # Call scroll_to_top function to ensure automatic scrolling to the top
     scroll_to_top()
 
-    if 'user_input' in st.session_state:
-        recommendations = suggest_wines()
-
-        if recommendations is not None and not recommendations.empty:
-            # Stylish header
-            st.markdown(
-                "<h2 style='text-align: center; color: #2f4f4f;'>It's a Match! Enjoy Your Wine!</h2>",
-                unsafe_allow_html=True
-            )
-
-            # Display an aesthetic image indicating enjoyment
-            enjoyment_image_url = "data/photo/image2.jpeg"  # Replace this with the URL of your image
-            st.image(enjoyment_image_url, use_column_width=True)
-
-            # Separator for better section division
-            st.markdown("---")
-
-            # Display "Suggested Wines:" at the top
-            st.markdown("<h3 style='text-align: left; color: #2f4f4f;'>Suggested Wines:</h3>", unsafe_allow_html=True)
-
-            # Display the first wine recommendation
-            first_recommendation = recommendations.iloc[0]
-            st.markdown(
-                f"**Wine title:** {first_recommendation['title']} <br>"
-                f"**Wine Variety:** {first_recommendation['wine_variety']} <br>"
-                f"**Price:** ${first_recommendation['price']} <br>"
-                f"**Description:** {first_recommendation['description']} <br>"
-                f"**Country:** {first_recommendation['country']} <br>"
-                f"**Wine type:** {first_recommendation['wine_type']}",
-                unsafe_allow_html=True
-            )
-
-            if st.button("Show additional suggestions"):
-                st.markdown("<h4 style='text-align: left; color: #2f4f4f;'>Here are some additional suggestions:</h4>", unsafe_allow_html=True)
-
-                # Retrieve additional suggestions while filtering out those with the same wine title
-                seen_titles = set([first_recommendation['title']])
-                for index, recommendation in recommendations.iloc[1:5].iterrows():
-                    if recommendation['title'] not in seen_titles:
-                        seen_titles.add(recommendation['title'])
-                        st.markdown(
-                            f"**Wine title:** {recommendation['title']} <br>"
-                            f"**Wine Variety:** {recommendation['wine_variety']} <br>"
-                            f"**Price:** ${recommendation['price']} <br>"
-                            f"**Description:** {recommendation['description']} <br>"
-                            f"**Country:** {recommendation['country']}<br>"
-                            f"**Wine type:** {first_recommendation['wine_type']}",
-                            unsafe_allow_html=True
-                        )
-
-            # Add a button to give the chance to the user to redo the survey if they want
-            if st.button("Redo Survey"):
-                if 'additional_suggestions_displayed' in st.session_state:
-                    st.session_state.additional_suggestions_displayed = True  # Set the flag to True
-                redo_survey()
-
-            # Add "Cheers!" with similar style as st.image() caption
-            st.markdown(
-                "<p style='text-align: center; font-size: 18px; color: #2f4f4f;'>Cheers!</p>",
-                unsafe_allow_html=True
-            )
-            # Add gif
-            #gif_url = "https://media1.tenor.com/m/fd6I3YkDAZoAAAAC/cheers-are-you-the-one.gif"
-            # Display the GIF at the end
-            #st.image(gif_url, use_column_width=True)
-        else:
-            st.subheader("No recommendations available. Please retry with different settings for more suggestions. 🍷")
-            emote_url = "https://i.kym-cdn.com/photos/images/original/000/325/934/060.png"
-            st.image(emote_url, caption="You could've done better in your choices.", use_column_width=True)
-            if st.button("Retry with different settings"):
-                redo_survey()
-
-        # JavaScript to scroll to the top of the page
-        scroll_to_top_js = """
-            <script>
-            // Wait for the page to load first
-            window.onload = function() {
-                // Get the top of the page
-                const top = document.getElementById('top');
-                // Scroll to the top smoothly
-                top.scrollIntoView({ behavior: 'smooth' });
-            }
-            </script>
-        """
-        st.markdown(scroll_to_top_js, unsafe_allow_html=True)
-
-    else:
+    if 'user_input' not in st.session_state:
         st.error("Please fill out the survey first.")
-        redo_survey()
+        return
+    user_input = st.session_state.user_input
 
- # Create a placeholder to trigger the automatic scroll
-    st.empty()
+    # Get wine suggestions using user_input
+    recommendations = suggest_wines()
+
+    # Stylish header
+    st.markdown(
+        "<h2 style='text-align: center; color: #2f4f4f;'>It's a Match! Enjoy Your Wine!</h2>",
+        unsafe_allow_html=True
+    )
+
+    # Separator for better section division
+    st.markdown("---")
+
+    # Display "Suggested Wines:" at the top
+    st.markdown("<h3 style='text-align: left; color: #2f4f4f;'>Suggested Wines:</h3>", unsafe_allow_html=True)
+
+    # Display the first wine recommendation
+    first_recommendation = recommendations.iloc[0]
+    st.markdown(
+        f"**Wine title:** {first_recommendation['title']} <br>"
+        f"**Wine Variety:** {first_recommendation['wine_variety']} <br>"
+        f"**Price:** ${first_recommendation['price']} <br>"
+        f"**Description:** {first_recommendation['description']} <br>"
+        f"**Country:** {first_recommendation['country']}",
+        unsafe_allow_html=True
+    )
+
+    # Create a checkbox to act as the button
+    show_additional_suggestions = st.checkbox("Show additional suggestions")
+
+    # Check if the checkbox is checked
+    if show_additional_suggestions:
+        additional_recommendations = suggest_wines()
+
+        # Display additional suggestions using additional_recommendations
+        seen_titles = set([first_recommendation['title']])
+        count = 0  # Counter to limit the number of displayed suggestions
+        for index, recommendation in additional_recommendations.iterrows():
+            if recommendation['title'] not in seen_titles and count < 3:
+                seen_titles.add(recommendation['title'])
+                st.markdown(
+                    f"**Wine title:** {recommendation['title']} <br>"
+                    f"**Wine Variety:** {recommendation['wine_variety']} <br>"
+                    f"**Price:** ${recommendation['price']} <br>"
+                    f"**Description:** {recommendation['description']} <br>"
+                    f"**Country:** {recommendation['country']}",
+                    unsafe_allow_html=True
+                )
+                count += 1
+
+    # Add a button to give the chance to the user to redo the survey if they want
+    st.button("Redo Survey", on_click=redo_survey)
+
+    # Add "Cheers!" with similar style as st.image() caption
+    st.markdown(
+        "<p style='text-align: center; font-size: 18px; color: #2f4f4f;'>Cheers!</p>",
+        unsafe_allow_html=True
+    )
+    # Add gif
+    gif_url = "https://media1.tenor.com/m/fd6I3YkDAZoAAAAC/cheers-are-you-the-one.gif"
+    # Display the GIF at the end
+    st.image(gif_url, use_column_width=True)
