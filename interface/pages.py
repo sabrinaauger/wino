@@ -78,6 +78,7 @@ def wine_result_page():
 
     # Returnong message and allowing the user to redo_survey if no reco
     if recommendations is None or recommendations.empty:
+        st.image('data/photo/brokenglass.jpeg', use_column_width=True)
         st.warning("No wine recommendations found based on your preferences. Please retry the survey.")
         st.button("Redo Survey", on_click=redo_survey)
         st.markdown(
