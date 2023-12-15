@@ -22,7 +22,7 @@ import pandas as pd
 
 # Function to load the main dataset used
 def load_data():
-    csv_path = "data/cleaned_data/wine_reviews.csv"  # Replace with the actual path to your CSV file
+    csv_path = "data/cleaned_data/wine_reviews_df.csv"  # Replace with the actual path to your CSV file
     # csv_path ='https://raw.githubusercontent.com/sabrinaauger/wino/master/data/cleaned_data/wine_reviews_df.csv'
     # print(f"CSV Path: {csv_path}")
     data_load = pd.read_csv(csv_path)
