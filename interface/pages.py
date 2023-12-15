@@ -73,7 +73,9 @@ st.button("Get Started", on_click=set_page_to_survey, key="get_started_button")
 df = load_data()
 
 # Define welcome_page function
+
 def welcome_page():
+    st.markdown("Hello")
     scroll_to_top() # No need to redefine, as it's already defined above
 
 # Define survey page
