@@ -86,10 +86,23 @@ def wine_result_page():
             unsafe_allow_html=True
         )
         return
+    # Display "It's a match :" at the top with Stylish header
+    st.markdown(
+        "<h2 style='text-align: center; color: #2f4f4f;'>It's a Match! Enjoy Your Wine!</h2>",
+        unsafe_allow_html=True
+    )
+    # Separator for better section division
+    st.markdown("---")
+
     # Add gif
     gif_url = "https://media1.tenor.com/m/fd6I3YkDAZoAAAAC/cheers-are-you-the-one.gif"
     # Display the GIF at the end
     st.image(gif_url, use_column_width=True)
+    # Add "Cheers!" with similar style as st.image() caption
+    st.markdown(
+        "<p style='text-align: center; font-size: 18px; color: #2f4f4f;'>Cheers!</p>",
+        unsafe_allow_html=True
+    )
     # Separator for better section division
     st.markdown("---")
 
@@ -141,9 +154,3 @@ def wine_result_page():
 
     # Add a button to give the chance to the user to redo the survey if they want
     st.button("Redo Survey", on_click=redo_survey)
-
-    # Add "Cheers!" with similar style as st.image() caption
-    st.markdown(
-        "<p style='text-align: center; font-size: 18px; color: #2f4f4f;'>Cheers!</p>",
-        unsafe_allow_html=True
-    )
