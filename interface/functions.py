@@ -50,7 +50,7 @@ def country_selector():
 
 # Occasion selector
 def occasion_selector():
-    occasion_options = ['Anniversary', 'Birthday', 'Summer Pool party', 'Professional diner', 'Brunch',
+    occasion_options = ['No occasion','Anniversary', 'Birthday', 'Summer Pool party', 'Professional diner', 'Brunch',
                         'Seafood restaurant', 'Steakhouse restaurant','Date','To bring to a Dinner Party']
     selected_occasion = st.selectbox("Select the occasion:", occasion_options)
     return selected_occasion

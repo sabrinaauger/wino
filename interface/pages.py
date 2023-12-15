@@ -21,26 +21,26 @@ def display_logo_in_header():
 #Function to ensure that the page loaded displays the top of the page
 def scroll_to_top():
     # Create an anchor at the top of the page
-    st.markdown("<div id='top'></div>", unsafe_allow_html=True)
+    st.markdown("<div id='top'></div>")
 
     # JavaScript to scroll to the top of the page
-    st.markdown(
-        """
-        <script>
-        // Function to scroll to the top smoothly
-        function scrollToTop() {
-            const top = document.getElementById('top');
-            top.scrollIntoView({ behavior: 'smooth' });
-        }
+    # st.markdown(
+    #     """
+    #     <script>
+    #     // Function to scroll to the top smoothly
+    #     function scrollToTop() {
+    #         const top = document.getElementById('top');
+    #         top.scrollIntoView({ behavior: 'smooth' });
+    #     }
 
-        // Check condition and scroll to top when satisfied
-        if (window.location.hash === '#scrollToTop') {
-            scrollToTop();
-        }
-        </script>
-        """,
-        unsafe_allow_html=True
-    )
+    #     // Check condition and scroll to top when satisfied
+    #     if (window.location.hash === '#scrollToTop') {
+    #         scrollToTop();
+    #     }
+    #     </script>
+    #     """,
+    #     unsafe_allow_html=True
+    # )
 
 # Logo and title layout for welcome page
 header_st = display_logo_in_header()
@@ -74,7 +74,8 @@ df = load_data()
 
 # Define welcome_page function
 def welcome_page():
-    scroll_to_top() # No need to redefine, as it's already defined above
+    pass
+   # scroll_to_top() # No need to redefine, as it's already defined above
 
 # Define survey page
 def survey_page():
@@ -85,7 +86,7 @@ def wine_result_page():
     header_st = display_logo_in_header()
 
     # Call scroll_to_top function to ensure automatic scrolling to the top
-    scroll_to_top()
+    #scroll_to_top()
 
     if 'user_input' not in st.session_state:
         st.error("Please fill out the survey first.")
@@ -96,16 +97,21 @@ def wine_result_page():
     recommendations = suggest_wines()
 
     # Stylish header
+
     st.markdown(
         "<h2 style='text-align: center; color: #2f4f4f;'>It's a Match! Enjoy Your Wine!</h2>",
         unsafe_allow_html=True
     )
-
+    # Add gif
+    gif_url = "https://media1.tenor.com/m/fd6I3YkDAZoAAAAC/cheers-are-you-the-one.gif"
+    # Display the GIF at the end
+    st.image(gif_url, use_column_width=True)
     # Separator for better section division
     st.markdown("---")
 
     # Display "Suggested Wines:" at the top
     st.markdown("<h3 style='text-align: left; color: #2f4f4f;'>Suggested Wines:</h3>", unsafe_allow_html=True)
+
 
     # Display the first wine recommendation
     first_recommendation = recommendations.iloc[0]
@@ -149,7 +155,3 @@ def wine_result_page():
         "<p style='text-align: center; font-size: 18px; color: #2f4f4f;'>Cheers!</p>",
         unsafe_allow_html=True
     )
-    # Add gif
-    gif_url = "https://media1.tenor.com/m/fd6I3YkDAZoAAAAC/cheers-are-you-the-one.gif"
-    # Display the GIF at the end
-    st.image(gif_url, use_column_width=True)

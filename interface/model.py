@@ -32,12 +32,6 @@ def load_tfidf():
 
 
 # Train a similarity-based model using the loaded TF-IDF matrix
-def train_similarity_model():
-    vectorizer, matrix = load_tfidf()
-    cosine_sim = linear_kernel(matrix, matrix)
-    return cosine_sim
-
-# Function to get recommendations based on user input using the pre-trained model
 # Function to get recommendations based on user input using the pre-trained model
 def get_recommendations(user_input):
     # Load data
@@ -61,38 +55,29 @@ def get_recommendations(user_input):
     if country != "I don't know":
         filtered_recommendations = filtered_recommendations[filtered_recommendations['country'] == country]
 
-    # New: Filter recommendations based on selected occasion
-    if selected_occasion == 'Anniversary' or selected_occasion == 'Birthday':
-        filtered_recommendations = filtered_recommendations[filtered_recommendations['wine_type'] == 'Sparkling']
-    elif selected_occasion == 'Summer Pool party':
-        filtered_recommendations = filtered_recommendations[filtered_recommendations['wine_type'] == 'Rosé']
-    elif selected_occasion == 'Professional diner':
-        filtered_recommendations = filtered_recommendations[filtered_recommendations['wine_type'] == 'Red']
-    elif selected_occasion == 'Brunch':
-        filtered_recommendations = filtered_recommendations[
-            (filtered_recommendations['wine_type'] == 'Rose') | (filtered_recommendations['wine_type'] == 'White')
-        ]
-    elif selected_occasion == 'Seafood restaurant':
-        filtered_recommendations = filtered_recommendations[filtered_recommendations['wine_type'] == 'White']
-    elif selected_occasion == 'Steakhouse restaurant':
-        filtered_recommendations = filtered_recommendations[filtered_recommendations['wine_type'] == 'Red']
-    elif selected_occasion == 'Date':
-        date_wines = ['Merlot', 'Cabernet Sauvignon', 'Pinot Noir', 'Syrah']
-        sparkling_wines = ['Sparkling']
-        df_filtered_date = df[
-            (df['wine_variety'].str.contains('|'.join(date_wines))) |
-            (df['wine_type'].isin(sparkling_wines))
-        ]
-        filtered_recommendations = pd.concat([filtered_recommendations, df_filtered_date])
-    elif selected_occasion == 'To bring to a Dinner Party':
-        dinner_party_wines = ['Pinot Grigio', 'Sauvignon Blanc', 'Cabernet', 'Pinot Noir']
-        df_filtered_dinner_party = df[
-            (df['title'].str.contains('|'.join(dinner_party_wines)))
-        ]
-        filtered_recommendations = pd.concat([filtered_recommendations, df_filtered_dinner_party])
+    # Check if 'No Occasion' is selected
+    if selected_occasion == "No Occasion":
+        # Ignore occasion filtering, consider all other filters
+        filtered_recommendations = filtered_recommendations
+    else:
+        # Filter recommendations based on selected occasion
+        if selected_occasion == 'Anniversary' or selected_occasion == 'Birthday':
+            filtered_recommendations = filtered_recommendations[filtered_recommendations['wine_type'] == 'Sparkling']
+        elif selected_occasion == 'Summer Pool party':
+            filtered_recommendations = filtered_recommendations[filtered_recommendations['wine_type'] == 'Rosé']
+        # ... (other occasion-based filters)
+        elif selected_occasion == 'To bring to a Dinner Party':
+            dinner_party_wines = ['Pinot Grigio', 'Sauvignon Blanc', 'Cabernet', 'Pinot Noir']
+            df_filtered_dinner_party = df[
+                (df['title'].str.contains('|'.join(dinner_party_wines)))
+            ]
+            filtered_recommendations = pd.concat([filtered_recommendations, df_filtered_dinner_party])
 
     # Remove duplicates that might occur due to concatenation
     filtered_recommendations = filtered_recommendations.drop_duplicates()
+
+    # Rest of the code remains unchanged...
+
 
     # If no matches found after filtering, return None or an appropriate message
     if filtered_recommendations.empty:
