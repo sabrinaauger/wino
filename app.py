@@ -4,7 +4,7 @@ from interface.pages import welcome_page, survey_page, wine_result_page
 # Define page state
 def main():
     if 'page' not in st.session_state:
-        st.session_state.page = 'welcome'
+        st.session_state.page = 'survey'
 
     if st.session_state.page == 'welcome':
         welcome_page()
