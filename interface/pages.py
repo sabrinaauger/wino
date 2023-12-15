@@ -70,17 +70,21 @@ def wine_result_page():
     if 'user_input' not in st.session_state:
         st.error("Please fill out the survey first.")
         return
+
     user_input = st.session_state.user_input
 
     # Get wine suggestions using user_input
     recommendations = suggest_wines()
 
-    # Stylish header
-
-    st.markdown(
-        "<h2 style='text-align: center; color: #2f4f4f;'>It's a Match! Enjoy Your Wine!</h2>",
-        unsafe_allow_html=True
-    )
+    # Returnong message and allowing the user to redo_survey if no reco
+    if recommendations is None or recommendations.empty:
+        st.warning("No wine recommendations found based on your preferences. Please retry the survey.")
+        st.button("Redo Survey", on_click=redo_survey)
+        st.markdown(
+            "<p style='text-align: center; font-size: 18px; color: #2f4f4f;'>Cheers!</p>",
+            unsafe_allow_html=True
+        )
+        return
     # Add gif
     gif_url = "https://media1.tenor.com/m/fd6I3YkDAZoAAAAC/cheers-are-you-the-one.gif"
     # Display the GIF at the end
@@ -91,17 +95,25 @@ def wine_result_page():
     # Display "Suggested Wines:" at the top
     st.markdown("<h3 style='text-align: left; color: #2f4f4f;'>Suggested Wines:</h3>", unsafe_allow_html=True)
 
-
-    # Display the first wine recommendation
-    first_recommendation = recommendations.iloc[0]
-    st.markdown(
-        f"**Wine title:** {first_recommendation['title']} <br>"
-        f"**Wine Variety:** {first_recommendation['wine_variety']} <br>"
-        f"**Price:** ${first_recommendation['price']} <br>"
-        f"**Description:** {first_recommendation['description']} <br>"
-        f"**Country:** {first_recommendation['country']}",
+    # Check if there are any recommendations
+    if recommendations is None or recommendations.empty:
+        st.warning("No wine recommendations found based on your preferences. Please retry the survey.")
+        st.button("Redo Survey", on_click=redo_survey)
+        st.markdown(
+        "<p style='text-align: center; font-size: 18px; color: #2f4f4f;'>Cheers!</p>",
         unsafe_allow_html=True
     )
+    else:
+        # Display the first wine recommendation
+        first_recommendation = recommendations.iloc[0]
+        st.markdown(
+            f"**Wine title:** {first_recommendation['title']} <br>"
+            f"**Wine Variety:** {first_recommendation['wine_variety']} <br>"
+            f"**Price:** ${first_recommendation['price']} <br>"
+            f"**Description:** {first_recommendation['description']} <br>"
+            f"**Country:** {first_recommendation['country']}",
+            unsafe_allow_html=True
+        )
 
     # Create a checkbox to act as the button
     show_additional_suggestions = st.checkbox("Show additional suggestions")

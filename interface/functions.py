@@ -76,8 +76,7 @@ def suggest_wines():
         user_input = st.session_state.user_input
         recommendations = get_recommendations(user_input)
         return recommendations
-    else:
-        return None
+
 
 # Define the show additional suggestions button function with an initial state
 def suggest_button():
