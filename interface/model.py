@@ -42,10 +42,14 @@ def get_recommendations(user_input):
     country = user_input['country']
     min_price, max_price = user_input['price']
     selected_occasion = user_input['occasion']  # Extract selected occasion
+    dryness = user_input.get('dryness')
+    sweetness = user_input.get('sweetness')
+    type_of_wine = user_input.get('type_of_wine')
+    flavors = user_input.get('flavors')
 
     # Filter recommendations based on user preferences
     filtered_recommendations = df[
-        (df['price'] >= min_price) &  # Filter by minimum price
+        (df['price'] >= min_price) &
         (df['price'] <= max_price)
     ]
 
@@ -58,7 +62,7 @@ def get_recommendations(user_input):
     # Check if 'No Occasion' is selected
     if selected_occasion == "No Occasion":
         # Ignore occasion filtering, consider all other filters
-        filtered_recommendations = filtered_recommendations
+        pass
     else:
         # Filter recommendations based on selected occasion
         if selected_occasion == 'Anniversary' or selected_occasion == 'Birthday':
@@ -73,11 +77,20 @@ def get_recommendations(user_input):
             ]
             filtered_recommendations = pd.concat([filtered_recommendations, df_filtered_dinner_party])
 
+    # Apply additional filters based on dryness, sweetness, type of wine, and flavors
+    if country != "I don't know":
+        if dryness:
+            filtered_recommendations = filtered_recommendations[filtered_recommendations['dryness'] == dryness]
+        if sweetness:
+            filtered_recommendations = filtered_recommendations[filtered_recommendations['sweetness'] == sweetness]
+        if type_of_wine:
+            filtered_recommendations = filtered_recommendations[filtered_recommendations['wine_type'] == type_of_wine]
+        if flavors:
+            for flavor in flavors:
+                filtered_recommendations = filtered_recommendations[filtered_recommendations['flavors'].str.contains(flavor)]
+
     # Remove duplicates that might occur due to concatenation
     filtered_recommendations = filtered_recommendations.drop_duplicates()
-
-    # Rest of the code remains unchanged...
-
 
     # If no matches found after filtering, return None or an appropriate message
     if filtered_recommendations.empty:
